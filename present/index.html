@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F08A3C">
+<title>プレゼント交換の相手決め｜自分に当たらない・1人ずつ引く無料くじ</title>
+<meta name="description" content="参加者の名前を入れたら、スマホを回して1人ずつ引くだけ。自分自身には絶対に当たりません。クリスマス会・忘年会のプレゼント交換に。インストール不要、無料。">
+<link rel="canonical" href="https://kuji.kkpwebninja.com/present/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="プレゼント交換の相手決め｜自分には当たらない">
+<meta property="og:description" content="名前を入れて、1人ずつ引くだけ。渡す相手が決まります。">
+<meta property="og:url" content="https://kuji.kkpwebninja.com/present/">
+<meta property="og:site_name" content="くじの術">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "プレゼント交換くじ",
+  "url": "https://kuji.kkpwebninja.com/present/",
+  "description": "プレゼント交換で誰に渡すかを決める無料くじ。参加者が1人ずつ引く形で、自分自身には当たらないように割り当てます。",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "offers": {"@type":"Offer","price":"0","priceCurrency":"JPY"},
+  "author": {"@type":"Organization","name":"web忍者の砦"}
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2LM85GJN0L');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+<style>
+:root{--orange:#F08A3C;--orange-deep:#E06A20;--cream:#FBEFDC;--cream-deep:#F7E3C6;
+  --ink:#4A3B28;--ink-soft:#8A7560;--line:#EFD9B6;--paper:#FFFCF7;--ok:#5BB97E;--red:#D9534F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",system-ui,sans-serif;
+  line-height:1.7;-webkit-text-size-adjust:100%}
+header{background:linear-gradient(135deg,var(--orange),var(--orange-deep));color:#fff;padding:13px 16px;text-align:center}
+header h1{margin:0;font-size:18px;font-weight:800}
+header p{margin:3px 0 0;font-size:12px;opacity:.95}
+main{max-width:760px;margin:0 auto;padding:12px 12px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:12px}
+h2{font-size:15.5px;margin:0 0 10px;font-weight:800}
+button{font:inherit;cursor:pointer}
+.btn{border:0;border-radius:13px;padding:13px 14px;font-weight:800;font-size:15px;color:#fff;background:var(--orange)}
+.btn.big{width:100%;min-height:56px;font-size:17px}
+.btn.g{background:var(--ok)}
+.btn2{border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font-weight:700;font-size:13.5px}
+.btn:disabled,.btn2:disabled{opacity:.4;cursor:not-allowed}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+textarea,input[type=text],input[type=number],select{width:100%;border:2px solid var(--line);border-radius:12px;
+  padding:11px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
+textarea{min-height:120px;line-height:1.9;resize:vertical}
+label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
+.note{font-size:12.5px;color:var(--ink-soft);margin:8px 0 0}
+.hide{display:none!important}
+
+/* 引く画面 */
+.draw{background:var(--cream);border:2px solid var(--line);border-radius:16px;padding:16px 12px;text-align:center}
+.who{font-size:13px;font-weight:800;color:var(--ink-soft)}
+.hit{font-size:52px;font-weight:800;line-height:1.25;margin:10px 0 4px;color:var(--orange-deep);
+  min-height:78px;display:flex;align-items:center;justify-content:center;word-break:break-word}
+.hit.small{font-size:30px}
+.hit.blank{color:var(--ink-soft);font-size:22px;font-weight:700}
+.bar{height:6px;background:var(--cream-deep);border-radius:99px;overflow:hidden;margin:10px 0 4px}
+.bar>i{display:block;height:100%;background:var(--orange);border-radius:99px;transition:width .25s}
+
+/* 一覧 */
+.list{max-height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:12px}
+.item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--line);font-size:14px}
+.item:last-child{border-bottom:0}
+.item .n{min-width:34px;text-align:center;font-weight:800;color:var(--orange-deep);
+  border:1.5px solid var(--line);border-radius:8px;padding:1px 4px}
+.item .t{flex:1;word-break:break-word}
+.empty{padding:20px 12px;text-align:center;color:var(--ink-soft);font-size:13.5px}
+
+/* 座席表 */
+.seats{display:grid;gap:6px;margin-top:8px}
+.seat{border:1.5px solid var(--line);border-radius:10px;background:#fff;padding:7px 4px;text-align:center;
+  font-size:12.5px;line-height:1.4;min-height:52px;display:flex;flex-direction:column;justify-content:center}
+.seat b{display:block;font-size:14px;color:var(--orange-deep)}
+.seat.free{background:var(--cream-deep);color:var(--ink-soft)}
+
+/* 使い方 */
+.howto{margin-top:12px;padding:11px 12px;background:var(--cream);border:1px solid var(--line);border-radius:12px}
+.howto>b{display:block;font-size:13.5px;margin-bottom:4px}
+.howto ol{margin:6px 0 0;padding-left:1.3em;font-size:13.5px;line-height:1.95}
+
+/* 広告 */
+.ad-slot{margin:14px 0 4px;padding-top:12px;border-top:1px solid var(--line);text-align:center;min-height:124px}
+.ad-label{font-size:10.5px;letter-spacing:.14em;color:var(--ink-soft);margin-bottom:5px}
+.ad-slot ins.adsbygoogle{display:block;width:320px;height:100px;margin:0 auto}
+@media(min-width:760px){.ad-slot{min-height:114px}.ad-slot ins.adsbygoogle{width:728px;height:90px}}
+
+/* 数字を個別に選ぶ */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px;
+  margin-top:8px;max-height:230px;overflow-y:auto;padding:2px}
+.numchip{border:2px solid var(--line);border-radius:10px;background:#fff;padding:9px 2px;
+  text-align:center;font-weight:800;font-size:14px;cursor:pointer;user-select:none;color:var(--ink)}
+.numchip.on{border-color:var(--orange);background:var(--cream);color:var(--orange-deep)}
+.numchip.off{opacity:.4}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{border:1.5px solid var(--line);border-radius:8px;padding:4px 9px;font-size:13px;
+  font-weight:800;color:var(--ink-soft);background:#fff}
+.chip.done{border-color:var(--orange);color:var(--orange-deep);background:var(--cream)}
+</style>
+</head>
+<body>
+<header>
+  <h1>プレゼント交換くじ</h1>
+  <p>渡す相手を1人ずつ引く。自分には当たりません</p>
+</header>
+
+<main>
+  <section class="card">
+    <div class="draw">
+      <div class="who" id="who">下の欄に参加者の名前を入れてください</div>
+      <div class="hit blank" id="hit">－</div>
+      <div class="bar"><i id="prog" style="width:0"></i></div>
+      <button class="btn big" id="btnDraw" type="button" disabled>引く</button>
+      <div class="row" style="margin-top:8px">
+        <button class="btn2" id="btnNext" type="button" disabled>次の人へ</button>
+        <button class="btn2" id="btnReset" type="button" disabled>最初から</button>
+      </div>
+      <p class="note" id="msg"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>参加者を入れる</h2>
+    <label class="f" for="names">名前（1行に1人）</label>
+    <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう&#10;やまだ"></textarea>
+    <p class="note">2人から。同じ名前は1人にまとめます。<b>自分自身には絶対に当たりません。</b></p>
+    <button class="btn g" id="btnStart" type="button" style="width:100%;margin-top:10px">この人たちで始める</button>
+    <p class="note">始めると、いま引いている途中のものは消えます。</p>
+  </section>
+
+  <section class="card">
+    <h2>引いた人 <span id="count" style="color:var(--ink-soft);font-size:13px"></span></h2>
+    <div class="list" id="list"><div class="empty">まだ誰も引いていません</div></div>
+    <p class="note">誰が誰に渡すかは、ここには出しません。当日の楽しみのためです。</p>
+
+    <details>
+      <summary style="cursor:pointer;font-weight:800;font-size:13.5px;padding:10px 0 6px;color:var(--orange-deep)">幹事だけが見る：全員の組み合わせ</summary>
+      <p class="note" style="margin-top:0">開くと誰が誰に渡すか全部見えます。参加者に画面を渡す前に閉じてください。</p>
+      <div class="list" id="all"><div class="empty">まだ始まっていません</div></div>
+    </details>
+
+    <div class="howto">
+      <b>使い方</b>
+      <ol>
+        <li>参加者の名前を入れて「この人たちで始める」を押す</li>
+        <li>スマホを1人目に渡して「引く」を押してもらう</li>
+        <li>渡す相手を見たら「次の人へ」を押して伏せる</li>
+        <li>スマホを次の人に回す。これを人数ぶん繰り返す</li>
+      </ol>
+      <p class="note">全員に必ず渡す相手が1人ずつ当たり、自分自身には当たりません。<br>
+      途中で画面を閉じても、開き直せば続きから引けます。名前は端末の中だけに残り、外には送りません。</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ほかのくじ</h2>
+    <a href="/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">くじの術（数字を引く） — 順番・当番・番号を1人ずつ引く</a>
+    <a href="/seki/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">席決めくじ — 席番号を引く。座席表も出る</a>
+    <a href="/team/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">チーム分けくじ — 班を引く。人数は自動で均等に</a>
+    <a href="/junban/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">順番決めくじ — 出番を引く。進行表も出る</a>
+  </section>
+    <div class="ad-slot" id="ad-slot">
+      <div class="ad-label">広告</div>
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-1298304917726270"
+           data-ad-slot="2937937957"
+           data-ad-format="horizontal"
+           data-full-width-responsive="false"></ins>
+    </div>
+</main>
+
+<!-- WEBNINJA_RELATED_APPS -->
+<div style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
+  <a href="https://bingomachine.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ビンゴマシン — 1〜75を重複なしで抽選（忘年会・二次会に）</a>
+  <a href="https://dice.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">サイコロの術 — スマホがオンラインダイスに</a>
+  <a href="https://wordwolf.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ワードウルフ — スマホ1台でお題配布、4〜10人の定番パーティーゲーム</a>
+  <a href="https://ito.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito お題と数字の配布 — スマホ1台で数字を並べる協力ゲーム</a>
+  <a href="https://haa.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">声と表情で当てるゲーム — 同じ一言を違う気持ちで演じて当て合う</a>
+</div>
+
+<!-- WEBNINJA_UNIFIED_FOOTER -->
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+  <div>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
+    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+  </div>
+  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+</footer>
+<script>
+
+const $ = (id) => document.getElementById(id);
+
+/* フィッシャー・イェーツ。Math.random を1回ずつしか使わないので偏らない。 */
+function shuffle(a){
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* 途中で画面を閉じても続きから引けるようにする。
+   端末の中だけ。サーバには送らない。 */
+let saveWarned = false;
+function store(key, val){
+  try { localStorage.setItem(key, JSON.stringify(val)); saveWarned = false; }
+  catch (e) {
+    if (saveWarned) return;
+    saveWarned = true;
+    alert('この端末では途中の状態を保存できません。ブラウザがプライベートモードのようです。'
+        + '引いている間に画面を閉じると最初からになります。');
+  }
+}
+function restore(key){
+  try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; }
+}
+
+/* 名前欄の1行1人。空行と重複は落とす。 */
+function parseNames(text){
+  const seen = {}, out = [];
+  text.split('\n').forEach(l => {
+    const s = l.trim();
+    if (!s || seen[s]) return;
+    seen[s] = 1; out.push(s);
+  });
+  return out;
+}
+
+/* 広告は画面に近づいてから読み込む */
+function mountAd(){
+  const slot = $('ad-slot'); if (!slot) return;
+  let done = false;
+  const go = () => { if (done) return; done = true;
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { go(); io.disconnect(); } }),
+      { rootMargin: '300px 0px' });
+    io.observe(slot);
+  } else go();
+}
+
+const KEY = 'ninja-kuji-present-v1';
+const IDLE_HINT = '下の欄に参加者の名前を入れてください';
+
+let st = null;      // {names, pool, done:[{w,v}], ...}
+let shown = false;  // いま当たりを出しているか
+
+function total(){ return st ? st.pool.length + st.done.length : 0; }
+function whoNext(){
+  const i = st.done.length;
+  return st.names.length ? st.names[i] : (i + 1) + '人目';
+}
+function drawOne(){
+  if (!st || !st.pool.length || shown) return;
+  st.done.push({ w: whoNext(), v: st.pool.pop() });
+  shown = true;
+  store(KEY, st);
+  render();
+}
+function setButtons(){
+  const left = st.pool.length;
+  $('btnDraw').disabled = shown || !left;
+  $('btnDraw').textContent = left ? '引く' : '全員おわり';
+  $('btnNext').disabled = !shown;
+  $('btnReset').disabled = false;
+  $('prog').style.width = total() ? (st.done.length / total() * 100) + '%' : '0';
+  $('count').textContent = '（' + st.done.length + ' / ' + total() + '人）';
+}
+function idle(msg){
+  $('who').textContent = IDLE_HINT;
+  $('hit').textContent = '－'; $('hit').className = 'hit blank';
+  $('prog').style.width = '0';
+  $('btnDraw').disabled = $('btnNext').disabled = $('btnReset').disabled = true;
+  $('count').textContent = '';
+  $('msg').textContent = msg || '';
+}
+$('btnNext').onclick = () => { shown = false; render(st.pool.length ? '' : '全員ぶん出ました。'); };
+
+/* 誰も自分自身に当たらない並び（乱れ順列）を作る。
+   ランダムに混ぜて、自分に当たった人がいたらやり直す。
+   うまくいく確率は約1/e（37%）なので、数回で決まる。
+   まれに決まらないときのために、後ろに手直しを付けてある。 */
+function derange(n){
+  if (n < 2) return null;
+  let a;
+  for (let guard = 0; guard < 500; guard++) {
+    a = []; for (let i = 0; i < n; i++) a.push(i);
+    shuffle(a);
+    if (!a.some((v, i) => v === i)) return a;
+  }
+  for (let i = 0; i < n; i++) {
+    if (a[i] !== i) continue;
+    for (let j = 0; j < n; j++) {
+      // 入れ替えても新しい「自分当たり」を作らない相手を選ぶ
+      if (j !== i && a[j] !== j && a[j] !== i) { [a[i], a[j]] = [a[j], a[i]]; break; }
+    }
+  }
+  return a;
+}
+function render(msg){
+  if (!st) { idle(msg); $('list').innerHTML = '<div class="empty">まだ誰も引いていません</div>';
+             $('all').innerHTML = '<div class="empty">まだ始まっていません</div>'; return; }
+  const d = st.done.length, left = st.pool.length;
+  const hit = $('hit');
+  if (shown) {
+    $('who').textContent = st.done[d - 1].w + ' が渡す相手';
+    hit.textContent = st.names[st.done[d - 1].v];
+    hit.className = 'hit small';
+  } else {
+    $('who').textContent = left ? (whoNext() + '　どうぞ') : '全員引き終わりました';
+    hit.textContent = '－'; hit.className = 'hit blank';
+  }
+  setButtons();
+  const el = $('list');
+  if (!d) el.innerHTML = '<div class="empty">まだ誰も引いていません</div>';
+  else {
+    el.innerHTML = '';
+    st.done.forEach((r, i) => {
+      const row = document.createElement('div'); row.className = 'item';
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = String(i + 1);
+      const t = document.createElement('span'); t.className = 't'; t.textContent = r.w + '　引きました';
+      row.appendChild(n); row.appendChild(t); el.appendChild(row);
+    });
+    el.scrollTop = el.scrollHeight;
+  }
+  // 幹事用。折りたたみの中なので、参加者が回している間は見えない。
+  const av = $('all'); av.innerHTML = '';
+  st.names.forEach((nm, i) => {
+    const row = document.createElement('div'); row.className = 'item';
+    const t = document.createElement('span'); t.className = 't';
+    t.textContent = nm + ' → ' + st.names[st.map[i]];
+    row.appendChild(t); av.appendChild(row);
+  });
+  $('msg').textContent = msg || '';
+}
+$('btnDraw').onclick = drawOne;
+$('btnStart').onclick = () => {
+  const names = parseNames($('names').value);
+  if (names.length < 2) { st = null; render('名前を2人ぶん以上入れてください。'); return; }
+  const map = derange(names.length);
+  // pool には「引く順に配る相手の番号」を入れる。1人目=names[0] が引く。
+  const pool = [];
+  for (let i = names.length - 1; i >= 0; i--) pool.push(map[i]);
+  st = { names: names, map: map, pool: pool, done: [] };
+  shown = false; store(KEY, st);
+  render(names.length + '人で始めます。' + names[0] + ' さんからどうぞ。');
+  document.querySelector('.draw').scrollIntoView({ block: 'center' });
+};
+$('btnReset').onclick = () => {
+  if (!confirm('引いた結果を消して、組み合わせを作り直します。よろしいですか。')) return;
+  const names = st.names, map = derange(names.length);
+  const pool = []; for (let i = names.length - 1; i >= 0; i--) pool.push(map[i]);
+  st = { names: names, map: map, pool: pool, done: [] };
+  shown = false; store(KEY, st); render('組み合わせを作り直しました。');
+};
+
+st = restore(KEY);
+if (st && Array.isArray(st.pool) && Array.isArray(st.names) && Array.isArray(st.map)) {
+  $('names').value = st.names.join('\n');
+  render(st.pool.length ? '前回の続きです。' + whoNext() + ' さんからどうぞ。' : '前回のぶんは全員引き終わっています。');
+} else { st = null; render(); }
+mountAd();
+
+</script>
+</body>
+</html>

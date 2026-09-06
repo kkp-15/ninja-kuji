@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F08A3C">
+<title>チーム分けくじ｜1人ずつ引いて班を決める・人数は自動で均等に</title>
+<meta name="description" content="チーム数を決めたら、スマホを回して1人ずつ引くだけ。自分のチームが当たります。人数は自動で均等に分かれます。班決め・グループ分けに。インストール不要、無料。">
+<link rel="canonical" href="https://kuji.kkpwebninja.com/team/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="チーム分けくじ｜1人ずつ引いて班を決める">
+<meta property="og:description" content="チーム数を決めて、1人ずつ引くだけ。人数は自動で均等に分かれます。">
+<meta property="og:url" content="https://kuji.kkpwebninja.com/team/">
+<meta property="og:site_name" content="くじの術">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "チーム分けくじ",
+  "url": "https://kuji.kkpwebninja.com/team/",
+  "description": "班やグループを決める無料くじ。参加者が1人ずつ引いて自分のチームが決まり、人数は自動で均等に分かれます。",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "offers": {"@type":"Offer","price":"0","priceCurrency":"JPY"},
+  "author": {"@type":"Organization","name":"web忍者の砦"}
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2LM85GJN0L');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+<style>
+:root{--orange:#F08A3C;--orange-deep:#E06A20;--cream:#FBEFDC;--cream-deep:#F7E3C6;
+  --ink:#4A3B28;--ink-soft:#8A7560;--line:#EFD9B6;--paper:#FFFCF7;--ok:#5BB97E;--red:#D9534F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",system-ui,sans-serif;
+  line-height:1.7;-webkit-text-size-adjust:100%}
+header{background:linear-gradient(135deg,var(--orange),var(--orange-deep));color:#fff;padding:13px 16px;text-align:center}
+header h1{margin:0;font-size:18px;font-weight:800}
+header p{margin:3px 0 0;font-size:12px;opacity:.95}
+main{max-width:760px;margin:0 auto;padding:12px 12px 40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:12px}
+h2{font-size:15.5px;margin:0 0 10px;font-weight:800}
+button{font:inherit;cursor:pointer}
+.btn{border:0;border-radius:13px;padding:13px 14px;font-weight:800;font-size:15px;color:#fff;background:var(--orange)}
+.btn.big{width:100%;min-height:56px;font-size:17px}
+.btn.g{background:var(--ok)}
+.btn2{border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font-weight:700;font-size:13.5px}
+.btn:disabled,.btn2:disabled{opacity:.4;cursor:not-allowed}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+textarea,input[type=text],input[type=number],select{width:100%;border:2px solid var(--line);border-radius:12px;
+  padding:11px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
+textarea{min-height:120px;line-height:1.9;resize:vertical}
+label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
+.note{font-size:12.5px;color:var(--ink-soft);margin:8px 0 0}
+.hide{display:none!important}
+
+/* 引く画面 */
+.draw{background:var(--cream);border:2px solid var(--line);border-radius:16px;padding:16px 12px;text-align:center}
+.who{font-size:13px;font-weight:800;color:var(--ink-soft)}
+.hit{font-size:52px;font-weight:800;line-height:1.25;margin:10px 0 4px;color:var(--orange-deep);
+  min-height:78px;display:flex;align-items:center;justify-content:center;word-break:break-word}
+.hit.small{font-size:30px}
+.hit.blank{color:var(--ink-soft);font-size:22px;font-weight:700}
+.bar{height:6px;background:var(--cream-deep);border-radius:99px;overflow:hidden;margin:10px 0 4px}
+.bar>i{display:block;height:100%;background:var(--orange);border-radius:99px;transition:width .25s}
+
+/* 一覧 */
+.list{max-height:300px;overflow-y:auto;border:1px solid var(--line);border-radius:12px}
+.item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid var(--line);font-size:14px}
+.item:last-child{border-bottom:0}
+.item .n{min-width:34px;text-align:center;font-weight:800;color:var(--orange-deep);
+  border:1.5px solid var(--line);border-radius:8px;padding:1px 4px}
+.item .t{flex:1;word-break:break-word}
+.empty{padding:20px 12px;text-align:center;color:var(--ink-soft);font-size:13.5px}
+
+/* 座席表 */
+.seats{display:grid;gap:6px;margin-top:8px}
+.seat{border:1.5px solid var(--line);border-radius:10px;background:#fff;padding:7px 4px;text-align:center;
+  font-size:12.5px;line-height:1.4;min-height:52px;display:flex;flex-direction:column;justify-content:center}
+.seat b{display:block;font-size:14px;color:var(--orange-deep)}
+.seat.free{background:var(--cream-deep);color:var(--ink-soft)}
+
+/* 使い方 */
+.howto{margin-top:12px;padding:11px 12px;background:var(--cream);border:1px solid var(--line);border-radius:12px}
+.howto>b{display:block;font-size:13.5px;margin-bottom:4px}
+.howto ol{margin:6px 0 0;padding-left:1.3em;font-size:13.5px;line-height:1.95}
+
+/* 広告 */
+.ad-slot{margin:14px 0 4px;padding-top:12px;border-top:1px solid var(--line);text-align:center;min-height:124px}
+.ad-label{font-size:10.5px;letter-spacing:.14em;color:var(--ink-soft);margin-bottom:5px}
+.ad-slot ins.adsbygoogle{display:block;width:320px;height:100px;margin:0 auto}
+@media(min-width:760px){.ad-slot{min-height:114px}.ad-slot ins.adsbygoogle{width:728px;height:90px}}
+
+/* 数字を個別に選ぶ */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px;
+  margin-top:8px;max-height:230px;overflow-y:auto;padding:2px}
+.numchip{border:2px solid var(--line);border-radius:10px;background:#fff;padding:9px 2px;
+  text-align:center;font-weight:800;font-size:14px;cursor:pointer;user-select:none;color:var(--ink)}
+.numchip.on{border-color:var(--orange);background:var(--cream);color:var(--orange-deep)}
+.numchip.off{opacity:.4}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{border:1.5px solid var(--line);border-radius:8px;padding:4px 9px;font-size:13px;
+  font-weight:800;color:var(--ink-soft);background:#fff}
+.chip.done{border-color:var(--orange);color:var(--orange-deep);background:var(--cream)}
+</style>
+</head>
+<body>
+<header>
+  <h1>チーム分けくじ</h1>
+  <p>1人ずつ引いて班を決める。人数は自動で均等に</p>
+</header>
+
+<main>
+  <section class="card">
+    <div class="draw">
+      <div class="who" id="who">下の欄でチーム数を決めてください</div>
+      <div class="hit blank" id="hit">－</div>
+      <div class="bar"><i id="prog" style="width:0"></i></div>
+      <button class="btn big" id="btnDraw" type="button" disabled>引く</button>
+      <div class="row" style="margin-top:8px">
+        <button class="btn2" id="btnNext" type="button" disabled>次の人へ</button>
+        <button class="btn2" id="btnReset" type="button" disabled>最初から</button>
+      </div>
+      <p class="note" id="msg"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>チームを決める</h2>
+    <div class="row">
+      <div>
+        <label class="f" for="num">全部で何人</label>
+        <input type="number" id="num" min="2" max="200" value="8" inputmode="numeric">
+      </div>
+      <div>
+        <label class="f" for="teams">いくつのチームに分ける</label>
+        <input type="number" id="teams" min="2" max="12" value="2" inputmode="numeric">
+      </div>
+    </div>
+    <label class="f"><input type="checkbox" id="useNames"> 名前を入れて、チーム表に名前を出す</label>
+    <div id="nameWrap" class="hide">
+      <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
+      <p class="note">1行に1人。人数は名前の数に合わせます。</p>
+    </div>
+    <button class="btn g" id="btnStart" type="button" style="width:100%;margin-top:10px">この分け方で始める</button>
+    <p class="note">人数が割り切れないときは、1人差までに収めます。</p>
+  </section>
+
+  <section class="card">
+    <h2>チーム表 <span id="count" style="color:var(--ink-soft);font-size:13px"></span></h2>
+    <div id="teamList"><div class="empty">まだ始まっていません</div></div>
+
+    <div class="howto">
+      <b>使い方</b>
+      <ol>
+        <li>人数とチーム数を決めて「この分け方で始める」を押す</li>
+        <li>スマホを1人目に渡して「引く」を押してもらう</li>
+        <li>チームを見たら「次の人へ」を押して伏せる</li>
+        <li>スマホを次の人に回す。これを人数ぶん繰り返す</li>
+      </ol>
+      <p class="note">人数は自動で均等になります。割り切れないときも1人差までです。<br>
+      途中で画面を閉じても、開き直せば続きから引けます。名前は端末の中だけに残り、外には送りません。</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ほかのくじ</h2>
+    <a href="/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">くじの術（数字を引く） — 順番・当番・番号を1人ずつ引く</a>
+    <a href="/present/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">プレゼント交換くじ — 渡す相手を引く。自分には当たらない</a>
+    <a href="/seki/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">席決めくじ — 席番号を引く。座席表も出る</a>
+    <a href="/junban/" style="display:block;padding:.5rem 0;color:#1565c0;text-decoration:none;font-size:.95rem;line-height:1.6;border-top:1px solid var(--line)">順番決めくじ — 出番を引く。進行表も出る</a>
+  </section>
+    <div class="ad-slot" id="ad-slot">
+      <div class="ad-label">広告</div>
+      <ins class="adsbygoogle" style="display:block"
+           data-ad-client="ca-pub-1298304917726270"
+           data-ad-slot="2937937957"
+           data-ad-format="horizontal"
+           data-full-width-responsive="false"></ins>
+    </div>
+</main>
+
+<!-- WEBNINJA_RELATED_APPS -->
+<div style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
+  <a href="https://bingomachine.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ビンゴマシン — 1〜75を重複なしで抽選（忘年会・二次会に）</a>
+  <a href="https://dice.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">サイコロの術 — スマホがオンラインダイスに</a>
+  <a href="https://wordwolf.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ワードウルフ — スマホ1台でお題配布、4〜10人の定番パーティーゲーム</a>
+  <a href="https://ito.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ito お題と数字の配布 — スマホ1台で数字を並べる協力ゲーム</a>
+  <a href="https://haa.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">声と表情で当てるゲーム — 同じ一言を違う気持ちで演じて当て合う</a>
+</div>
+
+<!-- WEBNINJA_UNIFIED_FOOTER -->
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+  <div>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
+    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+  </div>
+  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+</footer>
+<script>
+
+const $ = (id) => document.getElementById(id);
+
+/* フィッシャー・イェーツ。Math.random を1回ずつしか使わないので偏らない。 */
+function shuffle(a){
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* 途中で画面を閉じても続きから引けるようにする。
+   端末の中だけ。サーバには送らない。 */
+let saveWarned = false;
+function store(key, val){
+  try { localStorage.setItem(key, JSON.stringify(val)); saveWarned = false; }
+  catch (e) {
+    if (saveWarned) return;
+    saveWarned = true;
+    alert('この端末では途中の状態を保存できません。ブラウザがプライベートモードのようです。'
+        + '引いている間に画面を閉じると最初からになります。');
+  }
+}
+function restore(key){
+  try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; }
+}
+
+/* 名前欄の1行1人。空行と重複は落とす。 */
+function parseNames(text){
+  const seen = {}, out = [];
+  text.split('\n').forEach(l => {
+    const s = l.trim();
+    if (!s || seen[s]) return;
+    seen[s] = 1; out.push(s);
+  });
+  return out;
+}
+
+/* 広告は画面に近づいてから読み込む */
+function mountAd(){
+  const slot = $('ad-slot'); if (!slot) return;
+  let done = false;
+  const go = () => { if (done) return; done = true;
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { go(); io.disconnect(); } }),
+      { rootMargin: '300px 0px' });
+    io.observe(slot);
+  } else go();
+}
+
+const KEY = 'ninja-kuji-team-v1';
+const IDLE_HINT = '下の欄でチーム数を決めてください';
+const TEAM_NAME = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+
+let st = null;      // {names, pool, done:[{w,v}], ...}
+let shown = false;  // いま当たりを出しているか
+
+function total(){ return st ? st.pool.length + st.done.length : 0; }
+function whoNext(){
+  const i = st.done.length;
+  return st.names.length ? st.names[i] : (i + 1) + '人目';
+}
+function drawOne(){
+  if (!st || !st.pool.length || shown) return;
+  st.done.push({ w: whoNext(), v: st.pool.pop() });
+  shown = true;
+  store(KEY, st);
+  render();
+}
+function setButtons(){
+  const left = st.pool.length;
+  $('btnDraw').disabled = shown || !left;
+  $('btnDraw').textContent = left ? '引く' : '全員おわり';
+  $('btnNext').disabled = !shown;
+  $('btnReset').disabled = false;
+  $('prog').style.width = total() ? (st.done.length / total() * 100) + '%' : '0';
+  $('count').textContent = '（' + st.done.length + ' / ' + total() + '人）';
+}
+function idle(msg){
+  $('who').textContent = IDLE_HINT;
+  $('hit').textContent = '－'; $('hit').className = 'hit blank';
+  $('prog').style.width = '0';
+  $('btnDraw').disabled = $('btnNext').disabled = $('btnReset').disabled = true;
+  $('count').textContent = '';
+  $('msg').textContent = msg || '';
+}
+$('btnNext').onclick = () => { shown = false; render(st.pool.length ? '' : '全員ぶん出ました。'); };
+
+/* 人数をチーム数で割って、余りを1人ずつ配る。
+   8人3チームなら 3・3・2 になる。これを混ぜて配れば均等のまま引ける。 */
+function build(n, teams, names){
+  const pool = [];
+  for (let i = 0; i < n; i++) pool.push(i % teams);
+  return { names: names, teams: teams, pool: shuffle(pool), done: [] };
+}
+function render(msg){
+  if (!st) { idle(msg); $('teamList').innerHTML = '<div class="empty">まだ始まっていません</div>'; return; }
+  const d = st.done.length, left = st.pool.length;
+  const hit = $('hit');
+  if (shown) {
+    $('who').textContent = st.done[d - 1].w + ' のチーム';
+    hit.textContent = TEAM_NAME[st.done[d - 1].v] + 'チーム';
+    hit.className = 'hit small';
+  } else {
+    $('who').textContent = left ? (whoNext() + '　どうぞ') : '全員引き終わりました';
+    hit.textContent = '－'; hit.className = 'hit blank';
+  }
+  setButtons();
+  const box = $('teamList'); box.innerHTML = '';
+  for (let t = 0; t < st.teams; t++) {
+    const mem = st.done.filter(r => r.v === t).map(r => r.w);
+    // まだ引いていないぶんも「あと何人入る」が分かるようにしておく
+    const cap = Math.floor(total() / st.teams) + (t < total() % st.teams ? 1 : 0);
+    const h = document.createElement('div'); h.className = 'item';
+    const n = document.createElement('span'); n.className = 'n'; n.textContent = TEAM_NAME[t];
+    const s = document.createElement('span'); s.className = 't';
+    s.textContent = mem.length ? mem.join('、') : 'まだ誰もいません';
+    const c = document.createElement('span');
+    c.style.cssText = 'font-size:12px;color:var(--ink-soft);white-space:nowrap';
+    c.textContent = mem.length + '/' + cap + '人';
+    h.appendChild(n); h.appendChild(s); h.appendChild(c);
+    box.appendChild(h);
+  }
+  $('msg').textContent = msg || '';
+}
+$('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); };
+$('btnDraw').onclick = drawOne;
+$('btnStart').onclick = () => {
+  let names = [];
+  if ($('useNames').checked) {
+    names = parseNames($('names').value);
+    if (names.length < 2) { st = null; render('名前を2人ぶん以上入れてください。'); return; }
+  }
+  const n = names.length || Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0));
+  const teams = Math.max(2, Math.min(12, parseInt($('teams').value, 10) || 2));
+  if (!n || n < 2) { st = null; render('人数は2人以上にしてください。'); return; }
+  if (teams > n) { st = null; render('チーム数が人数より多くなっています。'); return; }
+  st = build(n, teams, names);
+  shown = false; store(KEY, st);
+  render(n + '人を' + teams + 'チームに分けます。1人目からどうぞ。');
+  document.querySelector('.draw').scrollIntoView({ block: 'center' });
+};
+$('btnReset').onclick = () => {
+  if (!confirm('引いた結果を消して、分け直します。よろしいですか。')) return;
+  st = build(total(), st.teams, st.names);
+  shown = false; store(KEY, st); render('分け直しました。');
+};
+
+st = restore(KEY);
+if (st && Array.isArray(st.pool) && Array.isArray(st.done)) {
+  st.names = st.names || []; st.teams = st.teams || 2;
+  if (st.names.length) { $('useNames').checked = true; $('nameWrap').classList.remove('hide'); $('names').value = st.names.join('\n'); }
+  $('num').value = total() || 8; $('teams').value = st.teams;
+  render(st.pool.length ? '前回の続きです。' + whoNext() + 'からどうぞ。' : '前回のぶんは全員引き終わっています。');
+} else { st = null; render(); }
+mountAd();
+
+</script>
+</body>
+</html>
