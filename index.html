@@ -11,7 +11,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="くじの術｜スマホ1台を回して1人ずつ引く">
+<meta property="og:title" content="くじ引きツール｜スマホ1台を回して1人ずつ引く・重複なし">
 <meta property="og:description" content="人数を決めて、あとは1人ずつ引くだけ。同じ数字は出ません。">
 <meta property="og:url" content="https://kuji.kkpwebninja.com/">
 <meta property="og:site_name" content="くじの術">
@@ -20,13 +20,82 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "くじの術",
+  "name": "くじ引きツール（くじの術）",
+  "alternateName": "くじの術",
   "url": "https://kuji.kkpwebninja.com/",
   "description": "数字のくじを1人ずつ引ける無料ツール。人数を決めると1〜Nを重複なしで配ります。順番決め・当番決め・番号決めに使えます。",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Web",
   "offers": {"@type":"Offer","price":"0","priceCurrency":"JPY"},
-  "author": {"@type":"Organization","name":"web忍者の砦"}
+  "inLanguage": "ja",
+  "datePublished": "2026-09-06",
+  "dateModified": "2026-09-19",
+  "author": {"@type":"Organization","name":"web忍者の砦"},
+  "publisher": {"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "同じ数字が重複して出ることはありますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "ありません。「この数字で始める」を押したときに、使う数字をまとめて混ぜ、引くたびにそこから1つずつ取り出します。一度出た数字は残りから無くなるので、同じ数字は二度出ません。残りは「まだ出ていない数字」で確かめられます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "何番まで使えますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "入力欄は、はじめが0〜999、おわりが1〜999です。1回に使える数字は2個以上500個までで、500個を超える範囲を入れたときは、はじめの数字から500個ぶんを使います。5〜30のように途中から始めることも、数字を個別に外すこともできます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "スマホ1台でできますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "できます。1台を順番に回して使う作りです。「引く」で数字が出て、「次の人へ」を押すと数字が伏せられるので、そのまま次の人に渡せます。アプリのインストールも登録も要りません。引いた数字は「引いた結果」に残るので、あとで全員で確かめられます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "引いた履歴は残りますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "残ります。引いた結果と残りの数字は、その端末のブラウザの中に保存されます。途中で画面を閉じても、同じ端末で開き直せば続きから引けます。「最初から」を押すと結果を消して同じ数字を混ぜ直し、「この数字で始める」を押すと新しい数字で始め直します。名前も結果も外には送りません。ブラウザのプライベートモードでは保存できないことがあり、そのときは画面に知らせが出ます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "名前を入れて引けますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "引けます。「名前を入れて、誰が何番かを残す」にチェックを入れ、1行に1人ずつ書きます。引く人数は名前の数になり、書いた順に名前で案内されます。数字のほうが多いときは、小さいほうから人数ぶんだけを使います。同じ名前が2行あると1人として数えるので、同名の人は「たなかA」「たなかB」のように書き分けてください。名前の数より使える数字が少ないと始められません。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "4と9を外したり、欠席者の番号を抜いたりできますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "できます。「使う数字を個別に選ぶ」にチェックを入れると数字が1つずつ並び、押した数字を外せます。「4と9を外す」は、4・9・14・19のように末尾が4か9の数字をまとめて外すボタンです。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "当たりやすい数字や順番はありますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "ありません。数字はフィッシャー・イェーツ法という混ぜ方で並べ替えていて、どの並びも同じ確からしさで出ます。乱数はブラウザの標準のもの（Math.random）を使っています。"
+   }
+  }
+ ]
 }
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
@@ -93,10 +162,17 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 .seat b{display:block;font-size:14px;color:var(--orange-deep)}
 .seat.free{background:var(--cream-deep);color:var(--ink-soft)}
 
-/* 使い方 */
-.howto{margin-top:12px;padding:11px 12px;background:var(--cream);border:1px solid var(--line);border-radius:12px}
-.howto>b{display:block;font-size:13.5px;margin-bottom:4px}
-.howto ol{margin:6px 0 0;padding-left:1.3em;font-size:13.5px;line-height:1.95}
+/* 読み物（使い方・こんなときに・よくある質問）
+   くじを引く欄は小さい字で詰めてあるが、読む部分は16px・#333にする。カードには入れない。 */
+.read{margin:30px 4px 26px;color:#333;font-size:16px;line-height:1.8}
+.read h2{font-size:20px;line-height:1.5;margin:38px 0 14px;padding:6px 10px;color:#333;
+  border-left:4px solid var(--orange);background:#fff8ee}
+.read h2:first-child{margin-top:0}
+.read h3{font-size:16.5px;line-height:1.6;font-weight:800;margin:24px 0 4px;color:#333}
+.read p{margin:0 0 14px}
+.read ol,.read ul{margin:0 0 14px;padding-left:1.4em}
+.read li{margin-bottom:8px}
+.read a{color:#1a6fc4}
 
 /* 広告 */
 .ad-slot{margin:14px 0 4px;padding-top:12px;border-top:1px solid var(--line);text-align:center;min-height:288px}
@@ -120,8 +196,8 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 </head>
 <body>
 <header>
-  <h1>くじの術</h1>
-  <p>スマホを回して、1人ずつ引く。同じ数字は出ません</p>
+  <h1>くじ引きツール</h1>
+  <p>くじの術｜スマホを回して1人ずつ引く・重複なし</p>
 </header>
 
 <main>
@@ -180,19 +256,44 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 
     <label class="f" style="margin-top:12px">まだ出ていない数字</label>
     <div class="chips" id="left"><span class="note">まだ始まっていません</span></div>
+  </section>
 
-    <div class="howto">
-      <b>使い方</b>
-      <ol>
-        <li>はじめとおわりの数字を決めて「この数字で始める」を押す</li>
-        <li>スマホを1人目に渡して「引く」を押してもらう</li>
-        <li>数字を見たら「次の人へ」を押して伏せる</li>
-        <li>スマホを次の人に回す。これを人数ぶん繰り返す</li>
-      </ol>
-      <p class="note">同じ数字は二度出ません。順番決め、当番決め、番号決めに使えます。</p>
-      <p class="note"><b>使う数字を個別に選ぶ</b>を開くと、1つずつ外せます。欠席者の番号を抜く、4と9を外す、飛び番だけを使う、といったときに。</p>
-      <p class="note">途中で画面を閉じても、開き直せば続きから引けます。名前は端末の中だけに残り、外には送りません。</p>
-    </div>
+  <section class="read">
+    <h2>使い方</h2>
+    <ol>
+      <li>「数字を決める」で、はじめとおわりの数字を人数に合わせて入れ、「この数字で始める」を押す。最初は1〜10が入っています。</li>
+      <li>スマホを1人目に渡し、「引く」を押してもらう。数字が大きく出ます。</li>
+      <li>数字を見たら「次の人へ」を押して数字を伏せ、スマホを次の人に回す。全員が引くまで2と3を繰り返します。</li>
+    </ol>
+    <p>同じ数字は二度出ません。引いた数字は「引いた結果」に順に並び、まだ出ていない数字もその下で確かめられます。</p>
+    <p>「使う数字を個別に選ぶ」を開くと、数字を1つずつ外せます。欠席者の番号を抜く、4と9を外す、飛び番だけを使う、といったときに使います。</p>
+    <p>途中で画面を閉じても、開き直せば続きから引けます。名前は端末の中だけに残り、外には送りません。</p>
+
+    <h2>こんなときに</h2>
+    <ul>
+      <li><b>順番を決める</b>　引いた数字を、そのまま発表順・ゲームの手番・並び順にします。全員ぶんの進行表まで出したいときは<a href="/junban/">順番決めくじ</a>へ。</li>
+      <li><b>当番・係を決める</b>　「1を引いた人が当番」のように当たりの数字を先に決めてから、全員で引きます。</li>
+      <li><b>席替え・席決め</b>　席に番号を振っておけば、このページでも決められます。座席表の形で見たいときは<a href="/seki/">席決めくじ</a>へ。</li>
+      <li><b>プレゼント交換</b>　渡す相手を引きます。自分には当たりません。<a href="/present/">プレゼント交換くじ</a>へ。</li>
+      <li><b>チーム分け・班決め</b>　引くと自分のチームが出ます。人数は自動で均等に分かれます。<a href="/team/">チーム分けくじ</a>へ。</li>
+      <li><b>出席番号で当てる</b>　欠席者や欠番があるときは、「使う数字を個別に選ぶ」でその番号を外してから始めます。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <h3>同じ数字が重複して出ることはありますか</h3>
+    <p>ありません。「この数字で始める」を押したときに、使う数字をまとめて混ぜ、引くたびにそこから1つずつ取り出します。一度出た数字は残りから無くなるので、同じ数字は二度出ません。残りは「まだ出ていない数字」で確かめられます。</p>
+    <h3>何番まで使えますか</h3>
+    <p>入力欄は、はじめが0〜999、おわりが1〜999です。1回に使える数字は2個以上500個までで、500個を超える範囲を入れたときは、はじめの数字から500個ぶんを使います。5〜30のように途中から始めることも、数字を個別に外すこともできます。</p>
+    <h3>スマホ1台でできますか</h3>
+    <p>できます。1台を順番に回して使う作りです。「引く」で数字が出て、「次の人へ」を押すと数字が伏せられるので、そのまま次の人に渡せます。アプリのインストールも登録も要りません。引いた数字は「引いた結果」に残るので、あとで全員で確かめられます。</p>
+    <h3>引いた履歴は残りますか</h3>
+    <p>残ります。引いた結果と残りの数字は、その端末のブラウザの中に保存されます。途中で画面を閉じても、同じ端末で開き直せば続きから引けます。「最初から」を押すと結果を消して同じ数字を混ぜ直し、「この数字で始める」を押すと新しい数字で始め直します。名前も結果も外には送りません。ブラウザのプライベートモードでは保存できないことがあり、そのときは画面に知らせが出ます。</p>
+    <h3>名前を入れて引けますか</h3>
+    <p>引けます。「名前を入れて、誰が何番かを残す」にチェックを入れ、1行に1人ずつ書きます。引く人数は名前の数になり、書いた順に名前で案内されます。数字のほうが多いときは、小さいほうから人数ぶんだけを使います。同じ名前が2行あると1人として数えるので、同名の人は「たなかA」「たなかB」のように書き分けてください。名前の数より使える数字が少ないと始められません。</p>
+    <h3>4と9を外したり、欠席者の番号を抜いたりできますか</h3>
+    <p>できます。「使う数字を個別に選ぶ」にチェックを入れると数字が1つずつ並び、押した数字を外せます。「4と9を外す」は、4・9・14・19のように末尾が4か9の数字をまとめて外すボタンです。</p>
+    <h3>当たりやすい数字や順番はありますか</h3>
+    <p>ありません。数字はフィッシャー・イェーツ法という混ぜ方で並べ替えていて、どの並びも同じ確からしさで出ます。乱数はブラウザの標準のもの（Math.random）を使っています。</p>
   </section>
 
   <section class="card">
