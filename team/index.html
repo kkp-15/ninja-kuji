@@ -116,6 +116,11 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 .chip{border:1.5px solid var(--line);border-radius:8px;padding:4px 9px;font-size:13px;
   font-weight:800;color:var(--ink-soft);background:#fff}
 .chip.done{border-color:var(--orange);color:var(--orange-deep);background:var(--cream)}
+
+/* 見た目の調整（2026-09-24・AIっぽさを消す）: 影・大きな角丸・クリーム全面の地をやめる（測定から生成し、機能・広告表示に関わる部品は手で除外）。元のルールは上に残し上書き。 */
+body { background: #fff; }
+section.card, div.draw, div.bar, #btnDraw, #btnStart, #list, #all, div.howto { border-radius: 8px; }
+#prog, #btnNext, #btnReset { border-radius: 6px; }
 </style>
 </head>
 <body>
