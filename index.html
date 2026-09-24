@@ -154,6 +154,8 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
   border:1.5px solid var(--line);border-radius:8px;padding:1px 4px}
 .item .t{flex:1;word-break:break-word}
 .empty{padding:20px 12px;text-align:center;color:var(--ink-soft);font-size:13.5px}
+/* 空っぽのときだけ出る挿し絵（2026-09-24・Codex制作）。1台を回して引く遊び方を伝える。引くと一覧に置き換わる */
+.empty img{display:block;width:150px;height:auto;margin:0 auto 6px}
 
 /* 座席表 */
 .seats{display:grid;gap:6px;margin-top:8px}
@@ -257,7 +259,7 @@ section.card, div.draw, div.bar, #btnDraw, #btnStart, #list { border-radius: 8px
 
   <section class="card">
     <h2>引いた結果 <span id="count" style="color:var(--ink-soft);font-size:13px"></span></h2>
-    <div class="list" id="list"><div class="empty">まだ誰も引いていません</div></div>
+    <div class="list" id="list"><div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div></div>
 
     <label class="f" style="margin-top:12px">まだ出ていない数字</label>
     <div class="chips" id="left"><span class="note">まだ始まっていません</span></div>
@@ -474,7 +476,7 @@ $('btnNo49').onclick = () => {
 function render(msg){
   if (!st) {
     idle(msg);
-    $('list').innerHTML = '<div class="empty">まだ誰も引いていません</div>';
+    $('list').innerHTML = '<div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div>';
     $('left').innerHTML = '<span class="note">まだ始まっていません</span>';
     return;
   }
@@ -489,7 +491,7 @@ function render(msg){
   }
   setButtons();
   const el = $('list');
-  if (!d) el.innerHTML = '<div class="empty">まだ誰も引いていません</div>';
+  if (!d) el.innerHTML = '<div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div>';
   else {
     el.innerHTML = '';
     st.done.forEach(r => {
