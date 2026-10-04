@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#F08A3C">
-<title>プレゼント交換の相手決め｜自分に当たらない・1人ずつ引く無料くじ</title>
-<meta name="description" content="参加者の名前を入れたら、スマホを回して1人ずつ引くだけ。自分自身には絶対に当たりません。クリスマス会・忘年会のプレゼント交換に。インストール不要、無料。">
+<title>プレゼント交換くじ｜自分のが自分に当たらない・1人ずつ引く無料ツール（クリスマス会・忘年会）</title>
+<meta name="description" content="参加者の名前を入れたら、スマホを回して1人ずつ引くだけ。自分のプレゼントが自分に当たることはありません。クリスマス会・忘年会のプレゼント交換に。アプリのインストール不要、無料。">
 <link rel="canonical" href="https://kuji.kkpwebninja.com/present/">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
@@ -27,6 +27,62 @@
   "operatingSystem": "Web",
   "offers": {"@type":"Offer","price":"0","priceCurrency":"JPY"},
   "author": {"@type":"Organization","name":"web忍者の砦"}
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "自分のプレゼントが自分に当たることはありますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "ありません。「この人たちで始める」を押した時点で、全員の渡す相手をまとめて決めています。その中に自分が自分に当たる組み合わせがあれば捨てて作り直すので、最後の1人になっても自分の名前は出ません。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "誰が誰に渡すか、ほかの人に見えますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "引いた人の画面には、その人の渡す相手だけが出ます。「次の人へ」を押すと伏せられるので、そのまま次の人に回せます。「引いた人」の一覧には誰が引き終わったかだけが出ます。全員の組み合わせは「幹事だけが見る」を開いたときだけ見えます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "アプリのインストールや登録は要りますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "要りません。ブラウザでこのページを開くだけで、無料で使えます。スマホ1台を順番に回して使います。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "途中で画面を閉じたらどうなりますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "同じ端末・同じブラウザで開き直せば、続きから引けます。組み合わせは端末の中だけに保存し、外には送りません。ブラウザのプライベートモードでは保存できないことがあり、そのときは画面に知らせが出ます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "同じ名前の人がいるときは",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "同じ名前は1人にまとめられるので、「たなかA」「たなかB」のように書き分けてください。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "2人で渡し合う組み合わせになることはありますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "あります。AさんがBさんに、BさんがAさんに渡す組み合わせも出ます。自分に当たらないことだけを守って、あとは偶然に任せています。"
+   }
+  }
+ ]
 }
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
@@ -121,6 +177,15 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 body { background: #fff; }
 section.card, div.draw, div.bar, #btnDraw, #btnStart, #list, #all, div.howto { border-radius: 8px; }
 #prog, #btnNext, #btnReset { border-radius: 6px; }
+/* 読み物（仕組み・使い方・よくある質問）2026-10-04。カードに入れず、罫線と左揃え。 */
+.read{margin:22px 4px 18px;color:#333;font-size:16px;line-height:1.7}
+.read h2{font-size:18px;line-height:1.4;margin:26px 0 8px;padding:4px 10px;color:#333;border-left:4px solid var(--orange);background:#fff8ee}
+.read h2:first-child{margin-top:0}
+.read h3{font-size:16px;line-height:1.5;font-weight:800;margin:16px 0 4px;color:#333}
+.read p{margin:0 0 10px}
+.read ul{margin:0 0 10px;padding-left:1.3em}
+.read li{margin-bottom:6px}
+.read a{color:#1a6fc4}
 </style>
 </head>
 <body>
@@ -175,6 +240,33 @@ section.card, div.draw, div.bar, #btnDraw, #btnStart, #list, #all, div.howto { b
       <p class="note">全員に必ず渡す相手が1人ずつ当たり、自分自身には当たりません。<br>
       途中で画面を閉じても、開き直せば続きから引けます。名前は端末の中だけに残り、外には送りません。</p>
     </div>
+  </section>
+
+  <section class="read">
+    <h2>自分のプレゼントが自分に当たらない仕組み</h2>
+    <p>「この人たちで始める」を押した時点で、全員の渡す相手をまとめて決めます。自分が自分に当たる組み合わせが混ざっていたら、それは捨てて作り直します。だから最後の1人が引くときも、自分の名前は出ません。</p>
+    <p>紙のくじのように「最後の人が自分のを引いてやり直し」になることがありません。</p>
+
+    <h2>忘年会・クリスマス会での使い方</h2>
+    <ul>
+      <li><b>前もって準備</b>　幹事が名前を入れて「この人たちで始める」まで押しておけば、当日は同じスマホで開くだけで続きから引けます。</li>
+      <li><b>当日</b>　乾杯のあと、スマホを1人目から回します。渡す相手を見たら「次の人へ」で伏せて次の人へ。</li>
+      <li><b>交換の時間</b>　全員引けたら、それぞれが当たった相手にプレゼントを渡します。誰が誰に渡すかを幹事が読み上げたいときは「幹事だけが見る」を開きます。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <h3>自分のプレゼントが自分に当たることはありますか</h3>
+    <p>ありません。「この人たちで始める」を押した時点で、全員の渡す相手をまとめて決めています。その中に自分が自分に当たる組み合わせがあれば捨てて作り直すので、最後の1人になっても自分の名前は出ません。</p>
+    <h3>誰が誰に渡すか、ほかの人に見えますか</h3>
+    <p>引いた人の画面には、その人の渡す相手だけが出ます。「次の人へ」を押すと伏せられるので、そのまま次の人に回せます。「引いた人」の一覧には誰が引き終わったかだけが出ます。全員の組み合わせは「幹事だけが見る」を開いたときだけ見えます。</p>
+    <h3>アプリのインストールや登録は要りますか</h3>
+    <p>要りません。ブラウザでこのページを開くだけで、無料で使えます。スマホ1台を順番に回して使います。</p>
+    <h3>途中で画面を閉じたらどうなりますか</h3>
+    <p>同じ端末・同じブラウザで開き直せば、続きから引けます。組み合わせは端末の中だけに保存し、外には送りません。ブラウザのプライベートモードでは保存できないことがあり、そのときは画面に知らせが出ます。</p>
+    <h3>同じ名前の人がいるときは</h3>
+    <p>同じ名前は1人にまとめられるので、「たなかA」「たなかB」のように書き分けてください。</p>
+    <h3>2人で渡し合う組み合わせになることはありますか</h3>
+    <p>あります。AさんがBさんに、BさんがAさんに渡す組み合わせも出ます。自分に当たらないことだけを守って、あとは偶然に任せています。</p>
   </section>
 
   <section class="card">

@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#F08A3C">
-<title>席決めくじ｜1人ずつ引いて席を決める・座席表も出る無料ツール</title>
-<meta name="description" content="席数を決めたら、スマホを回して1人ずつ引くだけ。席番号が当たります。全員引き終わると座席表が出ます。飲み会・懇親会・教室の席替えに。インストール不要、無料。">
+<title>席決めくじ｜忘年会・飲み会の席を1人ずつ引いて決める・座席表も出る無料ツール</title>
+<meta name="description" content="席数を決めたら、スマホを回して1人ずつ引くだけ。席番号が当たり、全員引き終わると座席表が出ます。忘年会・飲み会・懇親会・教室の席替えに。アプリのインストール不要、無料。">
 <link rel="canonical" href="https://kuji.kkpwebninja.com/seki/">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
@@ -27,6 +27,62 @@
   "operatingSystem": "Web",
   "offers": {"@type":"Offer","price":"0","priceCurrency":"JPY"},
   "author": {"@type":"Organization","name":"web忍者の砦"}
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "同じ席が2回出ることはありますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "ありません。「この席数で始める」を押したときに席番号をまとめて混ぜ、引くたびにそこから1つずつ取り出します。一度出た席は残りから無くなります。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "上座はどこですか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "座席表の上の段が奥（上座）です。お店の席の形に合わせて「横に並べる数」を変えると、座席表がテーブルの並びに近くなります。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "名前を入れないと使えませんか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "名前なしでも使えます。席の数だけ決めれば、番号で引けます。名前を入れると、書いた順に名前で案内され、座席表に名前が出ます。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "何席まで使えますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "名前を入れないときは2〜200席です。名前を入れたときは、名前の数がそのまま席の数になります。横に並べる数は1〜10です。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "アプリのインストールや登録は要りますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "要りません。ブラウザでこのページを開くだけで、無料で使えます。スマホ1台を順番に回して使います。"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "途中で画面を閉じたらどうなりますか",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "同じ端末・同じブラウザで開き直せば、続きから引けます。名前や結果は端末の中だけに保存し、外には送りません。"
+   }
+  }
+ ]
 }
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L"></script>
@@ -121,6 +177,15 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 body { background: #fff; }
 section.card, div.draw, div.bar, #btnDraw, #btnStart, #list, #all, div.howto { border-radius: 8px; }
 #prog, #btnNext, #btnReset { border-radius: 6px; }
+/* 読み物（仕組み・使い方・よくある質問）2026-10-04。カードに入れず、罫線と左揃え。 */
+.read{margin:22px 4px 18px;color:#333;font-size:16px;line-height:1.7}
+.read h2{font-size:18px;line-height:1.4;margin:26px 0 8px;padding:4px 10px;color:#333;border-left:4px solid var(--orange);background:#fff8ee}
+.read h2:first-child{margin-top:0}
+.read h3{font-size:16px;line-height:1.5;font-weight:800;margin:16px 0 4px;color:#333}
+.read p{margin:0 0 10px}
+.read ul{margin:0 0 10px;padding-left:1.3em}
+.read li{margin-bottom:6px}
+.read a{color:#1a6fc4}
 </style>
 </head>
 <body>
@@ -181,6 +246,29 @@ section.card, div.draw, div.bar, #btnDraw, #btnStart, #list, #all, div.howto { b
       <p class="note">同じ席は二度出ません。飲み会・懇親会・教室の席替えに。<br>
       途中で画面を閉じても、開き直せば続きから引けます。名前は端末の中だけに残り、外には送りません。</p>
     </div>
+  </section>
+
+  <section class="read">
+    <h2>忘年会・飲み会での使い方</h2>
+    <ul>
+      <li><b>席の形を合わせる</b>　お店の席数と、1列に並ぶ数を入れます。座席表の上の段が奥（上座）です。</li>
+      <li><b>入口で回す</b>　来た人から順にスマホで引いてもらい、出た番号の席に座ります。幹事が席を決めた、と言われずに済みます。</li>
+      <li><b>名前を入れておくと</b>　全員引き終わったあと、座席表を見せれば誰がどこかひと目で分かります。</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <h3>同じ席が2回出ることはありますか</h3>
+    <p>ありません。「この席数で始める」を押したときに席番号をまとめて混ぜ、引くたびにそこから1つずつ取り出します。一度出た席は残りから無くなります。</p>
+    <h3>上座はどこですか</h3>
+    <p>座席表の上の段が奥（上座）です。お店の席の形に合わせて「横に並べる数」を変えると、座席表がテーブルの並びに近くなります。</p>
+    <h3>名前を入れないと使えませんか</h3>
+    <p>名前なしでも使えます。席の数だけ決めれば、番号で引けます。名前を入れると、書いた順に名前で案内され、座席表に名前が出ます。</p>
+    <h3>何席まで使えますか</h3>
+    <p>名前を入れないときは2〜200席です。名前を入れたときは、名前の数がそのまま席の数になります。横に並べる数は1〜10です。</p>
+    <h3>アプリのインストールや登録は要りますか</h3>
+    <p>要りません。ブラウザでこのページを開くだけで、無料で使えます。スマホ1台を順番に回して使います。</p>
+    <h3>途中で画面を閉じたらどうなりますか</h3>
+    <p>同じ端末・同じブラウザで開き直せば、続きから引けます。名前や結果は端末の中だけに保存し、外には送りません。</p>
   </section>
 
   <section class="card">
