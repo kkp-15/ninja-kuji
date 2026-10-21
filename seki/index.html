@@ -210,6 +210,8 @@ section.card{border-radius:var(--k-r)}
 textarea,input[type=text],input[type=number],select{border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:#fff}
 .bar{height:12px;border:var(--k-bw-s) solid var(--k-sumi);background:var(--k-surface);box-shadow:var(--k-sh-s)}
 .bar>i{background:var(--k-moegi)}
+/* 2026-10-21 進み具合は kit の k-bar（オレンジ・墨のふち）に。引いた数字は札が横から置かれる（k-reveal-fuda） */
+.kuji-bar{margin:10px 0 4px}
 .list{border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:#fff}
 details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-color:var(--k-orange);text-decoration-thickness:2px;text-underline-offset:4px}
 .note a,.read a,.howto a{color:var(--k-sumi);font-weight:700;text-decoration:underline;text-decoration-color:var(--k-orange);text-decoration-thickness:2px;text-underline-offset:3px}
@@ -264,7 +266,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <div class="draw">
       <div class="who" id="who">下の欄で席数を決めてください</div>
       <div class="hit blank" id="hit">－</div>
-      <div class="bar"><i id="prog" style="width:0"></i></div>
+      <div class="k-bar kuji-bar"><i id="prog" style="width:0"></i></div>
       <button class="k-btn k-btn-main d4-wide" id="btnDraw" type="button" disabled>引く</button>
       <div class="row" style="margin-top:8px">
         <button class="k-btn k-btn-sub" id="btnNext" type="button" disabled>次の人へ</button>
@@ -444,6 +446,7 @@ function drawOne(){
   shown = true;
   store(KEY, st);
   render();
+  if (window.KKit) { $('hit').classList.add('k-reveal-fuda'); KKit.reveal($('hit')); }
 }
 function setButtons(){
   const left = st.pool.length;
