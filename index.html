@@ -118,34 +118,34 @@
 <script src="/kit/kit.js" defer></script>
 <style>
 :root{--orange:#F08A3C;--orange-deep:#E06A20;--cream:#FBEFDC;--cream-deep:#F7E3C6;
-  --ink:#4A3B28;--ink-soft:#8A7560;--line:#EFD9B6;--paper:#FFFCF7;--ok:#5BB97E;--red:#D9534F}
+  --ink:#4A3B28;--ink-soft:#7e6b58;--line:#EFD9B6;--paper:#FFFCF7;--ok:#5BB97E;--red:#D9534F}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);
   font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",system-ui,sans-serif;
   line-height:1.7;-webkit-text-size-adjust:100%}
 header{background:linear-gradient(135deg,var(--orange),var(--orange-deep));color:#fff;padding:13px 16px;text-align:center}
 header h1{margin:0;font-size:18px;font-weight:800}
-header p{margin:3px 0 0;font-size:12px;opacity:.95}
+header p{margin:3px 0 0;font-size:14px;opacity:.95}
 main{max-width:760px;margin:0 auto;padding:12px 12px 40px}
 .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;margin-bottom:12px}
 h2{font-size:15.5px;margin:0 0 10px;font-weight:800}
 button{font:inherit;cursor:pointer}
-.btn{border:0;border-radius:13px;padding:13px 14px;font-weight:800;font-size:15px;color:#fff;background:var(--orange)}
+.btn{border:0;border-radius:13px;padding:13px 14px;font-weight:800;font-size:15px;color:#1f1a17;background:var(--orange)}
 .btn.big{width:100%;min-height:56px;font-size:17px}
 .btn.g{background:var(--ok)}
-.btn2{border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font-weight:700;font-size:13.5px}
+.btn2{border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font-weight:700;font-size:14px}
 .btn:disabled,.btn2:disabled{opacity:.4;cursor:not-allowed}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 textarea,input[type=text],input[type=number],select{width:100%;border:2px solid var(--line);border-radius:12px;
   padding:11px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
 textarea{min-height:120px;line-height:1.9;resize:vertical}
-label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
-.note{font-size:12.5px;color:var(--ink-soft);margin:8px 0 0}
+label.f{display:block;font-size:14px;font-weight:800;margin:10px 0 4px}
+.note{font-size:14px;color:var(--ink-soft);margin:8px 0 0}
 .hide{display:none!important}
 
 /* 引く画面 */
 .draw{background:var(--cream);border:2px solid var(--line);border-radius:16px;padding:16px 12px;text-align:center}
-.who{font-size:13px;font-weight:800;color:var(--ink-soft)}
+.who{font-size:14px;font-weight:800;color:var(--ink-soft)}
 .hit{font-size:52px;font-weight:800;line-height:1.25;margin:10px 0 4px;color:var(--orange-deep);
   min-height:78px;display:flex;align-items:center;justify-content:center;word-break:break-word}
 .hit.small{font-size:30px}
@@ -160,14 +160,14 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 .item .n{min-width:34px;text-align:center;font-weight:800;color:var(--orange-deep);
   border:1.5px solid var(--line);border-radius:8px;padding:1px 4px}
 .item .t{flex:1;word-break:break-word}
-.empty{padding:20px 12px;text-align:center;color:var(--ink-soft);font-size:13.5px}
+.empty{padding:20px 12px;text-align:center;color:var(--ink-soft);font-size:14px}
 /* 空っぽのときだけ出る挿し絵（2026-09-24・Codex制作）。1台を回して引く遊び方を伝える。引くと一覧に置き換わる */
 .empty img{display:block;width:150px;height:auto;margin:0 auto 6px}
 
 /* 座席表 */
 .seats{display:grid;gap:6px;margin-top:8px}
 .seat{border:1.5px solid var(--line);border-radius:10px;background:#fff;padding:7px 4px;text-align:center;
-  font-size:12.5px;line-height:1.4;min-height:52px;display:flex;flex-direction:column;justify-content:center}
+  font-size:14px;line-height:1.4;min-height:52px;display:flex;flex-direction:column;justify-content:center}
 .seat b{display:block;font-size:14px;color:var(--orange-deep)}
 .seat.free{background:var(--cream-deep);color:var(--ink-soft)}
 
@@ -198,7 +198,7 @@ label.f{display:block;font-size:12.5px;font-weight:800;margin:10px 0 4px}
 .numchip.off{opacity:.4}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.chip{border:1.5px solid var(--line);border-radius:8px;padding:4px 9px;font-size:13px;
+.chip{border:1.5px solid var(--line);border-radius:8px;padding:4px 9px;font-size:14px;
   font-weight:800;color:var(--ink-soft);background:#fff}
 .chip.done{border-color:var(--orange);color:var(--orange-deep);background:var(--cream)}
 
@@ -211,12 +211,12 @@ section.card, div.draw, div.bar, #btnDraw, #btnStart, #list { border-radius: 8px
 body.k-page{background:var(--k-surface);color:var(--k-sumi)}
 :root{--ink:var(--k-sumi);--ink-soft:#5b4a3e;--line:rgba(31,26,23,.2);--orange:var(--k-orange);--orange-deep:var(--k-shu)}
 header{position:relative;isolation:isolate;overflow:hidden;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto;color:var(--k-sumi);border-bottom:var(--k-bw) solid var(--k-sumi)}
-header h1{font-family:var(--k-brush);font-weight:400;font-size:22px;letter-spacing:.14em;line-height:1.3;font-feature-settings:"palt" 1}
+header h1{font-family:var(--k-brush);font-weight:400;font-size:22px;letter-spacing:.06em;line-height:1.3;font-feature-settings:"palt" 1}
 header p{color:var(--k-text-2);opacity:1}
 .d4-ninja{position:absolute;right:14px;bottom:6px;width:14px;opacity:.36;pointer-events:none;z-index:-1}
 .card{background:var(--k-surface) url(/kit/img/d4-washi.webp) 0 0/320px auto;border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-l)}
 section.card{border-radius:var(--k-r)}
-.card h2,main h2{font-family:var(--k-brush);font-weight:400;font-size:19px;letter-spacing:.12em;line-height:1.3;font-feature-settings:"palt" 1}
+.card h2,main h2{font-family:var(--k-head);font-weight:800;font-size:19px;letter-spacing:.02em;line-height:1.3;font-feature-settings:"palt" 1}
 /* ボタン: 主＝木札（1画面に1つ）／副＝生成り／小＝朱 */
 .d4-wide{display:flex;width:100%}
 .k-btn-sub{font-size:15px;padding:0 12px}
@@ -241,7 +241,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 .chip{border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r-pill)}
 .chip.done{border-color:var(--k-sumi);background:var(--k-shu);color:#fff}
 .howto{background:var(--k-kinari);border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r)}
-.howto>b{font-family:var(--k-brush);font-weight:400;letter-spacing:.1em}
+.howto>b{font-family:var(--k-head);font-weight:800;letter-spacing:.02em}
 .read{color:var(--k-sumi)}
 .read h2{border:0;background:none;padding:0;color:var(--k-sumi)}
 .read h2 .k-hd{font-size:20px}
@@ -253,13 +253,16 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 /* あわせて使えるアプリ（統一仕様の欄）を D4 に: 和紙の面・筆の見出し・墨の字＋オレンジの下線＋道しるべ。入れ物なので影なし（kit: 影は押せるものだけ）。中身とリンクは触らない（インライン style に勝つため !important） */
 @media screen{
 .kkp-rel{box-sizing:border-box;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/320px auto!important;border:var(--k-bw-s) solid var(--k-sumi)!important;border-radius:var(--k-r)!important;box-shadow:none!important;padding:12px 16px 6px!important;color:var(--k-sumi);text-align:left}
-.kkp-rel>div:first-child,.kkp-rel>b:first-child{display:block;margin:0 0 4px!important;padding:0!important;border:0!important;font-family:var(--k-brush)!important;font-weight:400!important;font-size:19px!important;line-height:1.3!important;letter-spacing:.12em;color:var(--k-sumi)!important;font-feature-settings:"palt" 1}
+.kkp-rel>div:first-child,.kkp-rel>b:first-child{display:block;margin:0 0 4px!important;padding:0!important;border:0!important;font-family:var(--k-head)!important;font-weight:800!important;font-size:19px!important;line-height:1.3!important;letter-spacing:.02em;color:var(--k-sumi)!important;font-feature-settings:"palt" 1}
 .kkp-rel>a{display:flex!important;align-items:center;gap:12px;box-sizing:border-box;min-height:48px;margin:0!important;padding:10px 0!important;border:0!important;border-top:1px dashed var(--k-line-soft)!important;background:none!important;color:var(--k-sumi)!important;font-size:15px!important;font-weight:700!important;line-height:1.55!important;letter-spacing:.02em;text-decoration:underline!important;text-decoration-color:var(--k-orange)!important;text-decoration-thickness:2px!important;text-underline-offset:4px;-webkit-tap-highlight-color:transparent}
 .kkp-rel>a::after{content:"";flex:none;width:26px;height:17px;margin-left:auto;background:var(--k-sign) center/100% 100% no-repeat;transition:transform .2s}
 .kkp-rel>a:hover{color:var(--k-shu)!important}
 .kkp-rel>a:hover::after,.kkp-rel>a:active::after,.kkp-rel>a:focus-visible::after{transform:translateX(4px)}
 }
 @media screen and (max-width:712px){.kkp-rel{max-width:calc(100vw - 24px)!important;margin-left:auto!important;margin-right:auto!important}}
+
+/* 2026-10-21 読みやすさ: kit の13pxの札・注記はこのサイトでは14pxに（kit 側の次の版で直すまでの上書き） */
+.k-tag,.k-upd,.k-result small,.k-install-t span,.k-teaser-asof,.k-teaser-host .mt-asof,.k-teaser-host .mt-badge,.k-seg>button small,.k-seg>label small{font-size:14px}
 </style>
 <!-- kkp-rel-d4:end -->
 </head>
@@ -321,7 +324,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
   </section>
 
   <section class="card">
-    <h2>引いた結果 <span id="count" style="color:var(--ink-soft);font-size:13px"></span></h2>
+    <h2>引いた結果 <span id="count" style="color:var(--ink-soft);font-size:14px"></span></h2>
     <div class="list" id="list"><div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div></div>
 
     <label class="f" style="margin-top:12px">まだ出ていない数字</label>
@@ -385,7 +388,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 
 <!-- WEBNINJA_RELATED_APPS -->
 <div class="kkp-rel" style="max-width:680px;margin:2rem auto 0;padding:1rem 1.2rem;background:#fffcf7;border:1px solid #f0e6d2;border-radius:12px;font-family:inherit;">
-  <div style="font-weight:800;color:#8b6b3d;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
+  <div style="font-weight:800;color:#6e5530;font-size:0.9rem;margin-bottom:0.3rem;">あわせて使えるアプリ</div>
   <a href="https://bingomachine.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ビンゴマシン — 1〜75を重複なしで抽選（忘年会・二次会に）</a>
   <a href="https://dice.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">サイコロの術 — スマホがオンラインダイスに</a>
   <a href="https://wordwolf.kkpwebninja.com/" style="display:block;padding:0.4rem 0;color:#1565c0;text-decoration:none;font-size:0.92rem;line-height:1.6;border-top:1px solid #f3ecd9;">ワードウルフ — スマホ1台でお題配布、3〜10人の定番パーティーゲーム</a>
@@ -395,15 +398,15 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 </div>
 
 <!-- WEBNINJA_UNIFIED_FOOTER -->
-<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:0.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
-  <div style="font-weight:800;color:#8b6b3d;font-size:0.85rem;margin-bottom:0.4rem;">web忍者の砦</div>
+<footer style="text-align:center;padding:2rem 1rem 2.5rem;font-size:.875rem;color:#5f6b7a;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7;">
+  <div style="font-weight:800;color:#6e5530;font-size:.875rem;margin-bottom:0.4rem;">web忍者の砦</div>
   <div>
-    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
-    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
-    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
-    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#8b6b3d;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
+    <a href="https://kkpwebninja.com/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">本丸トップ</a>·
+    <a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">プライバシーポリシー</a>·
+    <a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">お問い合わせ</a>·
+    <a href="https://x.com/kkp_webninja" target="_blank" rel="noopener" style="color:#6e5530;text-decoration:none;margin:0 0.5rem;">@kkp_webninja</a>
   </div>
-  <div style="margin-top:0.5rem;color:#bfa97a;">© 2025-2026 web忍者の砦</div>
+  <div style="margin-top:0.5rem;color:#7a6440;">© 2025-2026 web忍者の砦</div>
 </footer>
 <script>
 
