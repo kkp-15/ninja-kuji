@@ -170,15 +170,22 @@ label.f{display:block;font-size:14px;font-weight:800;margin:10px 0 4px}
 .tbl-head-box{background:#fff6ea;border-color:var(--k-shu,#c8452c)}
 .tbl .seats{margin-top:4px}
 .desk{margin:6px 0;padding:6px 4px;border-radius:8px;background:#d9b98f;color:#5b3d1e;font-size:12px;font-weight:700;text-align:center;letter-spacing:.1em}
-.tbl-head{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-weight:400;font-size:14px;min-height:36px;margin:-2px 0 4px}
+.tbl-head{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-weight:400;font-size:14px;min-height:44px;margin:-2px 0 4px;cursor:pointer}
 .tbl-head input{width:20px;height:20px;accent-color:var(--k-shu,#c8452c)}
 .tbl > b{display:block;font-size:14px;margin:0 0 4px}
 .hitsub{font-size:20px;font-weight:800;min-height:1.4em;margin:0 0 6px}
-.fix-row{display:grid;grid-template-columns:1fr 6.5em 44px;gap:6px;margin:0 0 6px}
+.fix-row{display:grid;grid-template-columns:1fr 1fr 44px;gap:6px;margin:0 0 6px}
 .fix-row select{font:inherit;font-size:16px;min-height:44px;padding:0 6px;border:2px solid var(--k-sumi,#333);border-radius:var(--k-r,10px);background:#fff;color:var(--k-sumi,#333)}
 .fix-row button{font:inherit;font-size:18px;min-height:44px;border:1.5px solid var(--k-line-soft,#ccc);border-radius:var(--k-r,10px);background:#fff;cursor:pointer}
 .seat span{word-break:keep-all;overflow-wrap:anywhere;font-size:13px}
 .seat b{white-space:nowrap}
+/* 2026-10-24 点検: 押す所を44px以上に・長い名前で横にはみ出さない */
+label.f.chk{display:flex;align-items:center;gap:8px;min-height:44px;margin:6px 0 0;cursor:pointer}
+label.f.chk input{width:20px;height:20px;flex:none;accent-color:var(--k-shu,#c8452c)}
+.picks button{max-width:100%;overflow-wrap:anywhere;line-height:1.4;padding:6px 14px}
+.setup-msg{margin:8px 0 0;color:var(--red);font-weight:700}
+.setup-msg:empty{display:none}
+main .card > a[href^="/"]{display:flex!important;align-items:center;min-height:44px}
 .seat .tag{display:inline-block;margin-top:2px;font-size:11px;font-weight:700;color:#fff;background:var(--k-shu,#c8452c);border-radius:6px;padding:0 5px}
 
 /* 使い方 */
@@ -314,13 +321,13 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     </div>
     <div id="multiWrap" class="hide">
       <div id="tblRows"></div>
-      <button class="k-btn k-btn-sub" id="btnTblAdd" type="button" style="width:100%">＋ テーブルを足す</button>
+      <button class="k-btn k-btn-sub" id="btnTblAdd" type="button" style="width:100%">＋ テーブルを足す（20卓まで）</button>
       <p class="note">席の番号は上座のテーブルから1番、続けてテーブルの順に付きます。人数がテーブルごとに違っても大丈夫です。</p>
     </div>
-    <div id="chartSlot"></div>
-    <label class="f"><input type="checkbox" id="useNames"> 名前を入れて、座席表に名前を出す</label>
+    <label class="f chk"><input type="checkbox" id="useNames"> 名前を入れて、座席表に名前を出す</label>
     <div id="nameWrap" class="hide">
       <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
+      <p class="note" id="nameCount" style="margin:4px 0 0;font-weight:700"></p>
       <p class="note">1行に1人。テーブル1つのときは、席の数を名前の数に合わせます。引くときは、自分の名前を押してから「引く」を押します（順番は自由）。</p>
       <div class="fix">
         <b class="f">先に席を決めておく人（なくてもよい）</b>
@@ -329,8 +336,11 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
         <button class="k-btn k-btn-sub" id="btnFixAdd" type="button" style="width:100%">＋ 席を決めておく人を足す</button>
       </div>
     </div>
+    <p class="note setup-msg" id="setupMsg" role="alert"></p>
     <button class="k-btn k-btn-main d4-wide" id="btnStart" type="button" style="margin-top:10px">この席数で始める</button>
     <p class="note hide" id="startNote">始めると、いま引いている途中のものは消えます。</p>
+    <button class="k-btn k-btn-sub hide" id="btnCancelEdit" type="button" style="width:100%;margin-top:8px">変えずに、引いている続きに戻る</button>
+    <div id="chartSlot"></div>
     </div>
     <button class="k-btn k-btn-sub hide" id="btnEdit" type="button" style="width:100%">席の数を変える</button>
   </section>
@@ -513,7 +523,7 @@ function renderPicks(){
     const b = document.createElement('button');
     b.type = 'button'; b.textContent = n;
     b.setAttribute('aria-pressed', n === pick ? 'true' : 'false');
-    b.onclick = () => { pick = n; render(); };
+    b.onclick = () => { pick = n; render(); $('btnDraw').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
     box.appendChild(b);
   });
 }
@@ -552,6 +562,8 @@ function render(msg){
   $('setupBody').classList.toggle('hide', !!st && !editing);
   $('btnEdit').classList.toggle('hide', !st || editing);
   $('startNote').classList.toggle('hide', !st);
+  $('btnCancelEdit').classList.toggle('hide', !st || !editing);
+  $('btnStart').textContent = st && editing ? 'この形で始め直す' : 'この席数で始める';
   // 席を決めている間は、座席表を設定のすぐ下に置いて形をその場で見せる
   const chart = $('chart');
   if (!st || editing) { if (chart.parentNode !== $('chartSlot')) $('chartSlot').appendChild(chart); }
@@ -562,7 +574,9 @@ function render(msg){
   if (st && !editing) { if (sc.previousElementSibling !== dc) sc.parentNode.insertBefore(dc, sc); }
   else if (dc.previousElementSibling !== sc) sc.parentNode.insertBefore(sc, dc);
   if (!st) { idle(msg); renderPicks(); preview(); return; }
-  $('drawCard').classList.remove('hide');
+  // 形を変えている間は引けないようにする（古い席で引いてしまわないように）
+  $('drawCard').classList.toggle('hide', editing);
+  if (!editing) $('setupMsg').textContent = '';
   const d = st.done.length, left = remaining();
   const hit = $('hit');
   if (shown) {
@@ -594,7 +608,7 @@ function drawSeats(n, cols, rows, tables){
     let v = 1;
     const side = (cnt) => {
       const g = document.createElement('div'); g.className = 'seats';
-      g.style.gridTemplateColumns = 'repeat(' + fitCols(Math.max(1, Math.min(8, cnt))) + ',1fr)';
+      g.style.gridTemplateColumns = 'repeat(' + fitCols(Math.max(1, Math.min(8, cnt)), -20) + ',1fr)';
       for (let j = 0; j < cnt; j++, v++) g.appendChild(seatCell(v, taken[v]));
       return g;
     };
@@ -615,15 +629,26 @@ function drawSeats(n, cols, rows, tables){
     });
     return;
   }
+  const c = fitCols(cols);
+  if (n > c && n <= c * 2) {
+    // 2列に収まるときは、向かい合わせのテーブル（席・机・席）として見せる
+    box.style.display = 'block';
+    const half = (from, to) => { const g = document.createElement('div'); g.className = 'seats'; g.style.gridTemplateColumns = 'repeat(' + c + ',1fr)';
+      for (let i = from; i <= to; i++) g.appendChild(seatCell(i, taken[i])); return g; };
+    box.appendChild(half(1, c));
+    const d = document.createElement('div'); d.className = 'desk'; d.textContent = 'テーブル'; box.appendChild(d);
+    box.appendChild(half(c + 1, n));
+    return;
+  }
   box.style.display = '';
   const g = box;
-  g.style.gridTemplateColumns = 'repeat(' + fitCols(cols) + ',1fr)';
+  g.style.gridTemplateColumns = 'repeat(' + c + ',1fr)';
   for (let i = 1; i <= n; i++) g.appendChild(seatCell(i, taken[i]));
 }
-/* 1マスが狭くなりすぎないよう、画面の幅で列の数を抑える（1マス68px以上） */
-function fitCols(c){
-  const w = ($('seats').clientWidth || $('seats').parentNode.clientWidth || 320);
-  return Math.max(1, Math.min(c, Math.floor((w + 6) / 74)));
+/* 1マスが狭くなりすぎないよう、画面の幅で列の数を抑える（1マス56px以上）。pad はテーブルの枠のぶん */
+function fitCols(c, pad){
+  const w = ($('seats').clientWidth || $('seats').parentNode.clientWidth || 320) + (pad || 0);
+  return Math.max(1, Math.min(c, Math.floor((w + 6) / 62)));
 }
 function seatCell(i, r){
   {
@@ -666,6 +691,7 @@ function renderTbl(){
     const lb = document.createElement('label'); lb.textContent = name; lb.htmlFor = 'tbl' + idx;
     const inp = document.createElement('input'); inp.type = 'number'; inp.id = 'tbl' + idx; inp.min = 1; inp.max = 30; inp.value = k; inp.inputMode = 'numeric';
     inp.oninput = () => { t.k = Math.max(1, Math.min(30, parseInt(inp.value, 10) || 0)) || 1; renderFix(); preview(); };
+    inp.onchange = () => { inp.value = t.k; };  // 0や31以上を入れたら、使う数に直して見せる
     const del = document.createElement('button'); del.type = 'button'; del.textContent = '×'; del.setAttribute('aria-label', name + 'を消す');
     del.disabled = tblDraft.length <= 2;
     del.onclick = () => { tblDraft.splice(idx, 1); renderTbl(); renderFix(); preview(); };
@@ -678,6 +704,7 @@ function renderTbl(){
     hd.appendChild(cb); hd.appendChild(document.createTextNode(' 上座のテーブル（片側だけに座る）'));
     row.appendChild(hd); box.appendChild(row);
   });
+  $('btnTblAdd').disabled = tblDraft.length >= 20;
 }
 $('btnTblAdd').onclick = () => { if (tblDraft.length < 20) { tblDraft.push({ k: (tblDraft[tblDraft.length - 1] || {}).k || 4, head: false }); renderTbl(); renderFix(); preview(); } };
 /* 席番号からどのテーブルかを出す（並べた順に番号を続けて付ける） */
@@ -704,7 +731,7 @@ function renderFix(){
     const sv = document.createElement('select'); sv.setAttribute('aria-label', '席の番号');
     sv.appendChild(new Option('席', ''));
     const tb = draftSize().tables;
-    for (let i = 1; i <= n; i++) sv.appendChild(new Option((tb ? tableOf(i, tb) + ' ' : '') + i + '番', String(i), false, i === f.v));
+    for (let i = 1; i <= n; i++) sv.appendChild(new Option(i + '番' + (tb ? ' ' + tableOf(i, tb) : ''), String(i), false, i === f.v));
     const del = document.createElement('button'); del.type = 'button'; del.textContent = '×'; del.setAttribute('aria-label', 'この行を消す');
     sn.onchange = () => { f.w = sn.value; preview(); };
     sv.onchange = () => { f.v = parseInt(sv.value, 10) || 0; preview(); };
@@ -725,21 +752,35 @@ function readFix(names, n){
   return { list: out };
 }
 $('btnFixAdd').onclick = () => {
-  if (draftSize().names.length < 2) { $('msg').textContent = ''; alert('先に名前を2人以上入れてください。'); return; }
+  if (draftSize().names.length < 2) { setupErr('先に上の欄に名前を2人以上入れてください。'); return; }
   fixDraft.push({ w: '', v: 0 }); renderFix();
 };
 /* 始める前は、入れた席の数と並びで座席表を見せる */
+function setupErr(m){ $('setupMsg').textContent = m || ''; if (m) $('setupMsg').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
 function preview(){
   const { names, n } = draftSize();
   const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
   const f = readFix(names, n);
+  // 名前の数・まとめた名前・席との差をその場で見せる
+  const use = $('useNames').checked, raw = $('names').value.split('\n').map(l => l.trim()).filter(Boolean);
+  const dupN = raw.length - names.length;
+  $('nameCount').textContent = !use || !raw.length ? '' : names.length + '人'
+    + (dupN ? '（同じ名前が重なっていたので' + dupN + '人ぶん減らしました。別の人なら「たなか2」のように変えてください）' : '')
+    + (shape === 'one' ? '。席の数は名前の数（' + names.length + '席）になります' : '／席は' + n + '席' + (names.length > n ? '。席が' + (names.length - n) + '席足りません' : names.length < n ? '（' + (n - names.length) + '席は空きます）' : ''));
+  const lock = use && shape === 'one' && names.length > 0;
+  $('num').disabled = lock; if (lock) $('num').value = names.length;
+  $('setupMsg').textContent = f.err || '';
   drawSeats(n, cols, f.list || [], draftSize().tables);
   $('count').textContent = '（' + n + '席・始める前）';
 }
 ['num', 'cols'].forEach(id => $(id).addEventListener('input', () => { if (!st || editing) preview(); }));
+// 範囲の外の数を入れたら、使う数に直して見せる
+$('num').addEventListener('change', () => { if (!$('num').disabled) $('num').value = Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0)); });
+$('cols').addEventListener('change', () => { $('cols').value = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4)); });
 $('names').addEventListener('input', () => { if (!st || editing) { renderFix(); preview(); } });
 $('btnEdit').onclick = () => { editing = true; render(); renderFix(); preview(); };
 $('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); if (!st || editing) { renderFix(); preview(); } };
+$('btnCancelEdit').onclick = () => { editing = false; draftFromSt(); render(); };
 $('btnDraw').onclick = drawOne;
 /* ボタン1つで、まだの人全員に席を割り当てる */
 $('btnAll').onclick = () => {
@@ -750,6 +791,15 @@ $('btnAll').onclick = () => {
   render('全員の席が決まりました。下の座席表を見てください。');
   $('seats').scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
+/* 設定の欄を、いま引いている席の形に戻す（読み込んだとき・形を変えるのをやめたとき） */
+function draftFromSt(){
+  fixDraft = st.fixed.map(f => ({ w: f.w, v: f.v }));
+  if (st.tables) { tblDraft = st.tables.map(t => ({ k: t.k, head: t.head })); shape = 'multi'; } else shape = 'one';
+  $('useNames').checked = !!st.names.length; $('nameWrap').classList.toggle('hide', !st.names.length);
+  $('names').value = st.names.join('\n');
+  $('num').value = total() || 8; $('cols').value = st.cols;
+  setShape(shape);
+}
 function build(n, cols, names, fixed, tables){
   fixed = fixed || [];
   const used = {}; fixed.forEach(f => { used[f.v] = 1; });
@@ -760,17 +810,17 @@ $('btnStart').onclick = () => {
   let names = [];
   if ($('useNames').checked) {
     names = parseNames($('names').value);
-    if (names.length < 2) { st = null; render('名前を2人ぶん以上入れてください。'); return; }
+    if (names.length < 2) { setupErr('名前を2人ぶん以上入れてください。'); return; }
   }
   const { n, tables } = draftSize();
-  if (!n || n < 2) { st = null; render('席は2つ以上にしてください。'); return; }
-  if (names.length > n) { render('名前が' + names.length + '人、席が' + n + '席です。席を足すか、名前を減らしてください。'); return; }
+  if (!n || n < 2) { setupErr('席は2つ以上にしてください。'); return; }
+  if (names.length > n) { setupErr('名前が' + names.length + '人、席が' + n + '席です。席を足すか、名前を減らしてください。'); return; }
   const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
   const f = readFix(names, n);
-  if (f.err) { render(f.err); return; }
-  if (names.length && f.list.length >= names.length) { render('くじを引く人が残りません。先に決める人を減らしてください。'); return; }
+  if (f.err) { setupErr(f.err); return; }
+  if (names.length && f.list.length >= names.length) { setupErr('全員の席が先に決まっていて、くじを引く人が残りません。先に決める人を減らしてください。'); return; }
   st = build(n, cols, names, f.list, tables);
-  shown = false; editing = false; pick = ''; store(KEY, st);
+  shown = false; editing = false; pick = ''; store(KEY, st); setupErr('');
   render(names.length ? n + '席ぶん用意しました。来た人から自分の名前を押して引きます。' : n + '席ぶん用意しました。1人目からどうぞ。');
   $('drawCard').scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
@@ -783,14 +833,9 @@ $('btnReset').onclick = () => {
 st = restore(KEY);
 if (st && Array.isArray(st.pool) && Array.isArray(st.done)) {
   st.names = st.names || []; st.cols = st.cols || 4; st.fixed = st.fixed || [];
-  fixDraft = st.fixed.map(f => ({ w: f.w, v: f.v }));
-  if (st.tables) {
-    // 前の形（人数だけの配列）からも続きが引けるようにそろえる
-    st.tables = st.tables.map((t, i) => typeof t === 'number' ? { k: t, head: false, label: (i + 1) + '卓目' } : t);
-    tblDraft = st.tables.map(t => ({ k: t.k, head: t.head })); shape = 'multi';
-  }
-  if (st.names.length) { $('useNames').checked = true; $('nameWrap').classList.remove('hide'); $('names').value = st.names.join('\n'); }
-  $('num').value = total() || 8; $('cols').value = st.cols;
+  // 前の形（人数だけの配列）からも続きが引けるようにそろえる
+  if (st.tables) st.tables = st.tables.map((t, i) => typeof t === 'number' ? { k: t, head: false, label: (i + 1) + '卓目' } : t);
+  draftFromSt();
   render(remaining() ? (st.names.length ? '前回の続きです。まだの人は自分の名前を押してください。' : '前回の続きです。' + whoNext() + 'からどうぞ。') : '前回のぶんは全員引き終わっています。');
 } else { st = null; render(); }
 setShape(shape);
