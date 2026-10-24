@@ -170,6 +170,8 @@ label.f{display:block;font-size:14px;font-weight:800;margin:10px 0 4px}
 .fix-row{display:grid;grid-template-columns:1fr 6.5em 44px;gap:6px;margin:0 0 6px}
 .fix-row select{font:inherit;font-size:16px;min-height:44px;padding:0 6px;border:2px solid var(--k-sumi,#333);border-radius:var(--k-r,10px);background:#fff;color:var(--k-sumi,#333)}
 .fix-row button{font:inherit;font-size:18px;min-height:44px;border:1.5px solid var(--k-line-soft,#ccc);border-radius:var(--k-r,10px);background:#fff;cursor:pointer}
+.seat span{word-break:keep-all;overflow-wrap:anywhere;font-size:13px}
+.seat b{white-space:nowrap}
 .seat .tag{display:inline-block;margin-top:2px;font-size:11px;font-weight:700;color:#fff;background:var(--k-shu,#c8452c);border-radius:6px;padding:0 5px}
 
 /* 使い方 */
@@ -336,6 +338,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
         <button class="k-btn k-btn-sub" id="btnNext" type="button" disabled>次の人へ</button>
         <button class="k-btn k-btn-sub" id="btnReset" type="button" disabled>最初から</button>
       </div>
+      <button class="k-btn k-btn-sub" id="btnAll" type="button" style="width:100%;margin-top:8px" disabled>残りの全員をまとめて決める</button>
       <p class="note" id="msg"></p>
     </div>
   </section>
@@ -350,7 +353,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
       <ol>
         <li>席の形（テーブル1つ／いくつか）と人数を決めて「この席数で始める」を押す</li>
         <li>スマホを1人目に渡して「引く」を押してもらう</li>
-        <li>席番号を見たら「次の人へ」を押し、次の人に回す</li>
+        <li>席番号を見たら「次の人へ」を押し、次の人に回す（「残りの全員をまとめて決める」なら1回で全員ぶん決まります）</li>
       </ol>
       <p class="note">同じ席は二度出ません。<br>
       閉じても続きから引けます。名前は端末の中だけに残し、外には送りません。</p>
@@ -518,6 +521,7 @@ function setButtons(){
   $('btnDraw').disabled = shown || !left || (st.names.length > 0 && !pick);
   $('btnDraw').textContent = left ? '引く' : '全員おわり';
   $('btnNext').disabled = !shown;
+  $('btnAll').disabled = shown || !left;
   $('btnReset').disabled = false;
   const people = st.names.length || total();
   $('prog').style.width = people ? (st.done.length / people * 100) + '%' : '0';
@@ -528,7 +532,7 @@ function idle(msg){
   $('who').textContent = IDLE_HINT;
   $('hit').textContent = '－'; $('hit').className = 'hit blank';
   $('prog').style.width = '0';
-  $('btnDraw').disabled = $('btnNext').disabled = $('btnReset').disabled = true;
+  $('btnDraw').disabled = $('btnNext').disabled = $('btnReset').disabled = $('btnAll').disabled = true;
   $('count').textContent = '';
   $('msg').textContent = msg || '';
 }
@@ -578,7 +582,7 @@ function drawSeats(n, cols, rows, tables){
       const t = document.createElement('div'); t.className = 'tbl';
       const h = document.createElement('b'); h.textContent = (ti + 1) + '卓目（' + k + '人）'; t.appendChild(h);
       const g = document.createElement('div'); g.className = 'seats';
-      g.style.gridTemplateColumns = 'repeat(' + Math.max(1, Math.min(6, Math.ceil(k / 2))) + ',1fr)';
+      g.style.gridTemplateColumns = 'repeat(' + fitCols(Math.max(1, Math.min(6, Math.ceil(k / 2)))) + ',1fr)';
       for (let j = 0; j < k; j++, v++) g.appendChild(seatCell(v, taken[v]));
       t.appendChild(g); box.appendChild(t);
     });
@@ -586,8 +590,13 @@ function drawSeats(n, cols, rows, tables){
   }
   box.style.display = '';
   const g = box;
-  g.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+  g.style.gridTemplateColumns = 'repeat(' + fitCols(cols) + ',1fr)';
   for (let i = 1; i <= n; i++) g.appendChild(seatCell(i, taken[i]));
+}
+/* 1マスが狭くなりすぎないよう、画面の幅で列の数を抑える（1マス68px以上） */
+function fitCols(c){
+  const w = ($('seats').clientWidth || $('seats').parentNode.clientWidth || 320);
+  return Math.max(1, Math.min(c, Math.floor((w + 6) / 74)));
 }
 function seatCell(i, r){
   {
@@ -689,6 +698,15 @@ $('names').addEventListener('input', () => { if (!st || editing) { renderFix(); 
 $('btnEdit').onclick = () => { editing = true; render(); renderFix(); preview(); };
 $('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); if (!st || editing) { renderFix(); preview(); } };
 $('btnDraw').onclick = drawOne;
+/* ボタン1つで、まだの人全員に席を割り当てる */
+$('btnAll').onclick = () => {
+  if (!st || shown || !remaining()) return;
+  if (st.names.length) leftNames().forEach(n => { st.done.push({ w: n, v: st.pool.pop() }); });
+  else while (st.pool.length) st.done.push({ w: (st.done.length + 1) + '人目', v: st.pool.pop() });
+  pick = ''; store(KEY, st);
+  render('全員の席が決まりました。下の座席表を見てください。');
+  $('seats').scrollIntoView({ block: 'start', behavior: 'smooth' });
+};
 function build(n, cols, names, fixed, tables){
   fixed = fixed || [];
   const used = {}; fixed.forEach(f => { used[f.v] = 1; });
@@ -729,6 +747,8 @@ if (st && Array.isArray(st.pool) && Array.isArray(st.done)) {
   render(remaining() ? (st.names.length ? '前回の続きです。まだの人は自分の名前を押してください。' : '前回の続きです。' + whoNext() + 'からどうぞ。') : '前回のぶんは全員引き終わっています。');
 } else { st = null; render(); }
 setShape(shape);
+let rsT = 0;
+window.addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(() => { if (!st || editing) preview(); else render(); }, 150); });
 mountAd();
 
 </script>
