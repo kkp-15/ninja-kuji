@@ -164,7 +164,12 @@ label.f{display:block;font-size:14px;font-weight:800;margin:10px 0 4px}
 .tbl-row{display:grid;grid-template-columns:4em 1fr 1.5em 44px;gap:6px;align-items:center;margin:0 0 6px;font-weight:700}
 .tbl-row input{font:inherit;font-size:16px;min-height:44px;padding:0 8px;border:2px solid var(--k-sumi,#333);border-radius:var(--k-r,10px);background:#fff;width:100%;box-sizing:border-box}
 .tbl-row button{font:inherit;font-size:18px;min-height:44px;border:1.5px solid var(--k-line-soft,#ccc);border-radius:var(--k-r,10px);background:#fff;cursor:pointer}
-.tbl{margin:10px 0 0}
+.tbl{margin:12px 0 0;padding:8px;border:1.5px solid var(--k-line-soft,#e4d8c6);border-radius:var(--k-r,10px);background:#fffdf8}
+.tbl-head-box{background:#fff6ea;border-color:var(--k-shu,#c8452c)}
+.tbl .seats{margin-top:4px}
+.desk{margin:6px 0;padding:6px 4px;border-radius:8px;background:#d9b98f;color:#5b3d1e;font-size:12px;font-weight:700;text-align:center;letter-spacing:.1em}
+.tbl-head{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-weight:400;font-size:14px;min-height:36px;margin:-2px 0 4px}
+.tbl-head input{width:20px;height:20px;accent-color:var(--k-shu,#c8452c)}
 .tbl > b{display:block;font-size:14px;margin:0 0 4px}
 .hitsub{font-size:20px;font-weight:800;min-height:1.4em;margin:0 0 6px}
 .fix-row{display:grid;grid-template-columns:1fr 6.5em 44px;gap:6px;margin:0 0 6px}
@@ -308,7 +313,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <div id="multiWrap" class="hide">
       <div id="tblRows"></div>
       <button class="k-btn k-btn-sub" id="btnTblAdd" type="button" style="width:100%">＋ テーブルを足す</button>
-      <p class="note">席の番号はテーブルの順に続けて付きます。人数がテーブルごとに違っても大丈夫です。</p>
+      <p class="note">席の番号は上座のテーブルから1番、続けてテーブルの順に付きます。人数がテーブルごとに違っても大丈夫です。</p>
     </div>
     <label class="f"><input type="checkbox" id="useNames"> 名前を入れて、座席表に名前を出す</label>
     <div id="nameWrap" class="hide">
@@ -554,7 +559,7 @@ function render(msg){
   if (shown) {
     $('who').textContent = st.done[d - 1].w + ' の席';
     hit.textContent = st.done[d - 1].v + '番';
-    $('hitSub').textContent = st.tables ? tableOf(st.done[d - 1].v, st.tables) + '卓目' : '';
+    $('hitSub').textContent = st.tables ? tableOf(st.done[d - 1].v, st.tables) : '';
     hit.className = 'hit';
   } else {
     $('who').textContent = !left ? '全員引き終わりました'
@@ -575,16 +580,29 @@ function drawSeats(n, cols, rows, tables){
   const box = $('seats');
   box.innerHTML = '';
   if (tables) {
-    // テーブルごとに枠を分け、向かい合わせの2列として並べる
+    // テーブルを絵にする。向かい合わせは「席・机・席」、上座は「席・机」で客席の方を向く
     box.style.display = 'block';
     let v = 1;
-    tables.forEach((k, ti) => {
-      const t = document.createElement('div'); t.className = 'tbl';
-      const h = document.createElement('b'); h.textContent = (ti + 1) + '卓目（' + k + '人）'; t.appendChild(h);
+    const side = (cnt) => {
       const g = document.createElement('div'); g.className = 'seats';
-      g.style.gridTemplateColumns = 'repeat(' + fitCols(Math.max(1, Math.min(6, Math.ceil(k / 2)))) + ',1fr)';
-      for (let j = 0; j < k; j++, v++) g.appendChild(seatCell(v, taken[v]));
-      t.appendChild(g); box.appendChild(t);
+      g.style.gridTemplateColumns = 'repeat(' + fitCols(Math.max(1, Math.min(8, cnt))) + ',1fr)';
+      for (let j = 0; j < cnt; j++, v++) g.appendChild(seatCell(v, taken[v]));
+      return g;
+    };
+    const desk = (txt) => { const d = document.createElement('div'); d.className = 'desk'; d.textContent = txt; return d; };
+    tables.forEach(tb => {
+      const t = document.createElement('div'); t.className = 'tbl' + (tb.head ? ' tbl-head-box' : '');
+      const h = document.createElement('b'); h.textContent = tb.label + '（' + tb.k + '人）'; t.appendChild(h);
+      if (tb.head) {
+        t.appendChild(side(tb.k));
+        t.appendChild(desk('テーブル（この下が客席）'));
+      } else {
+        const top = Math.ceil(tb.k / 2);
+        t.appendChild(side(top));
+        t.appendChild(desk('テーブル'));
+        if (tb.k - top) t.appendChild(side(tb.k - top));
+      }
+      box.appendChild(t);
     });
     return;
   }
@@ -612,7 +630,13 @@ function seatCell(i, r){
 }
 /* 席の形。テーブル1つ（席の数と列）か、テーブルがいくつか（テーブルごとの人数） */
 let shape = 'one';
-let tblDraft = [4, 4];
+let tblDraft = [{ k: 4, head: false }, { k: 4, head: false }];
+/* 席番号の順に並べ、名前を付ける。上座（片側だけ）の卓を先にして1番から */
+function orderTables(draft){
+  const heads = draft.filter(t => t.head), rest = draft.filter(t => !t.head);
+  return heads.map((t, i) => ({ k: t.k, head: true, label: heads.length > 1 ? '上座' + (i + 1) : '上座' }))
+    .concat(rest.map((t, i) => ({ k: t.k, head: false, label: (i + 1) + '卓目' })));
+}
 function setShape(v){
   shape = v;
   document.querySelectorAll('.shape button').forEach(b => b.setAttribute('aria-pressed', b.dataset.shape === v ? 'true' : 'false'));
@@ -623,31 +647,41 @@ function setShape(v){
 document.querySelectorAll('.shape button').forEach(b => { b.onclick = () => setShape(b.dataset.shape); });
 function renderTbl(){
   const box = $('tblRows'); box.innerHTML = '';
-  tblDraft.forEach((k, idx) => {
+  // 入力欄の名前も座席表と同じ呼び方（上座／1卓目…）にそろえる
+  let hi = 0, ri = 0;
+  const heads = tblDraft.filter(t => t.head).length;
+  tblDraft.forEach((t, idx) => {
+    const name = t.head ? (heads > 1 ? '上座' + (++hi) : '上座') : (++ri) + '卓目';
+    const k = t.k;
     const row = document.createElement('div'); row.className = 'tbl-row';
-    const lb = document.createElement('label'); lb.textContent = (idx + 1) + '卓目'; lb.htmlFor = 'tbl' + idx;
+    const lb = document.createElement('label'); lb.textContent = name; lb.htmlFor = 'tbl' + idx;
     const inp = document.createElement('input'); inp.type = 'number'; inp.id = 'tbl' + idx; inp.min = 1; inp.max = 30; inp.value = k; inp.inputMode = 'numeric';
-    inp.oninput = () => { tblDraft[idx] = Math.max(1, Math.min(30, parseInt(inp.value, 10) || 0)) || 1; renderFix(); preview(); };
-    const del = document.createElement('button'); del.type = 'button'; del.textContent = '×'; del.setAttribute('aria-label', (idx + 1) + '卓目を消す');
+    inp.oninput = () => { t.k = Math.max(1, Math.min(30, parseInt(inp.value, 10) || 0)) || 1; renderFix(); preview(); };
+    const del = document.createElement('button'); del.type = 'button'; del.textContent = '×'; del.setAttribute('aria-label', name + 'を消す');
     del.disabled = tblDraft.length <= 2;
     del.onclick = () => { tblDraft.splice(idx, 1); renderTbl(); renderFix(); preview(); };
     row.appendChild(lb); row.appendChild(inp);
     const unit = document.createElement('span'); unit.textContent = '人'; row.appendChild(unit);
-    row.appendChild(del); box.appendChild(row);
+    row.appendChild(del);
+    const hd = document.createElement('label'); hd.className = 'tbl-head';
+    const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = t.head;
+    cb.onchange = () => { t.head = cb.checked; renderTbl(); renderFix(); preview(); };
+    hd.appendChild(cb); hd.appendChild(document.createTextNode(' 上座のテーブル（片側だけに座る）'));
+    row.appendChild(hd); box.appendChild(row);
   });
 }
-$('btnTblAdd').onclick = () => { if (tblDraft.length < 20) { tblDraft.push(tblDraft[tblDraft.length - 1] || 4); renderTbl(); renderFix(); preview(); } };
-/* 席番号から何卓目かを出す（1卓目から番号を続けて付ける） */
+$('btnTblAdd').onclick = () => { if (tblDraft.length < 20) { tblDraft.push({ k: (tblDraft[tblDraft.length - 1] || {}).k || 4, head: false }); renderTbl(); renderFix(); preview(); } };
+/* 席番号からどのテーブルかを出す（並べた順に番号を続けて付ける） */
 function tableOf(v, tables){
   let acc = 0;
-  for (let i = 0; i < tables.length; i++) { acc += tables[i]; if (v <= acc) return i + 1; }
-  return tables.length;
+  for (let i = 0; i < tables.length; i++) { acc += tables[i].k; if (v <= acc) return tables[i].label; }
+  return tables[tables.length - 1].label;
 }
 /* 先に席を決めておく人。名前と席番号の組を画面で選ぶ */
 let fixDraft = [];  // [{w, v}]
 function draftSize(){
   const names = $('useNames').checked ? parseNames($('names').value) : [];
-  if (shape === 'multi') return { names: names, n: tblDraft.reduce((a, b) => a + b, 0), tables: tblDraft.slice() };
+  if (shape === 'multi') { const tb = orderTables(tblDraft); return { names: names, n: tb.reduce((a, t) => a + t.k, 0), tables: tb }; }
   return { names: names, n: names.length || Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0)), tables: null };
 }
 function renderFix(){
@@ -661,7 +695,7 @@ function renderFix(){
     const sv = document.createElement('select'); sv.setAttribute('aria-label', '席の番号');
     sv.appendChild(new Option('席', ''));
     const tb = draftSize().tables;
-    for (let i = 1; i <= n; i++) sv.appendChild(new Option((tb ? tableOf(i, tb) + '卓 ' : '') + i + '番', String(i), false, i === f.v));
+    for (let i = 1; i <= n; i++) sv.appendChild(new Option((tb ? tableOf(i, tb) + ' ' : '') + i + '番', String(i), false, i === f.v));
     const del = document.createElement('button'); del.type = 'button'; del.textContent = '×'; del.setAttribute('aria-label', 'この行を消す');
     sn.onchange = () => { f.w = sn.value; preview(); };
     sv.onchange = () => { f.v = parseInt(sv.value, 10) || 0; preview(); };
@@ -741,7 +775,11 @@ st = restore(KEY);
 if (st && Array.isArray(st.pool) && Array.isArray(st.done)) {
   st.names = st.names || []; st.cols = st.cols || 4; st.fixed = st.fixed || [];
   fixDraft = st.fixed.map(f => ({ w: f.w, v: f.v }));
-  if (st.tables) { tblDraft = st.tables.slice(); shape = 'multi'; }
+  if (st.tables) {
+    // 前の形（人数だけの配列）からも続きが引けるようにそろえる
+    st.tables = st.tables.map((t, i) => typeof t === 'number' ? { k: t, head: false, label: (i + 1) + '卓目' } : t);
+    tblDraft = st.tables.map(t => ({ k: t.k, head: t.head })); shape = 'multi';
+  }
   if (st.names.length) { $('useNames').checked = true; $('nameWrap').classList.remove('hide'); $('names').value = st.names.join('\n'); }
   $('num').value = total() || 8; $('cols').value = st.cols;
   render(remaining() ? (st.names.length ? '前回の続きです。まだの人は自分の名前を押してください。' : '前回の続きです。' + whoNext() + 'からどうぞ。') : '前回のぶんは全員引き終わっています。');
