@@ -47,7 +47,7 @@
    "name": "上座はどこですか",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "座席表の上の段が奥（上座）です。お店の席の形に合わせて「横に並べる数」を変えると、座席表がテーブルの並びに近くなります。"
+    "text": "座席表の上の段が奥（上座）です。お店の席の形に合わせて「1列に並ぶ席の数」を変えると、座席表がテーブルの並びに近くなります。"
    }
   },
   {
@@ -63,7 +63,7 @@
    "name": "何席まで使えますか",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "名前を入れないときは2〜200席です。名前を入れたときは、名前の数がそのまま席の数になります。横に並べる数は1〜10です。"
+    "text": "名前を入れないときは2〜200席です。名前を入れたときは、名前の数がそのまま席の数になります。1列に並ぶ席の数は1〜10です。"
    }
   },
   {
@@ -262,7 +262,33 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 </header>
 
 <main>
-  <section class="card">
+
+  <section class="card" id="setupCard">
+    <h2>席の数を決める</h2>
+    <p class="note" id="setupLead" style="margin:0 0 8px">決めたら、スマホを1人ずつ回して引きます。</p>
+    <div id="setupBody">
+    <div class="row">
+      <div>
+        <label class="f" for="num">席の数</label>
+        <input type="number" id="num" min="2" max="200" value="8" inputmode="numeric">
+      </div>
+      <div>
+        <label class="f" for="cols">1列に並ぶ席の数</label>
+        <input type="number" id="cols" min="1" max="10" value="4" inputmode="numeric">
+      </div>
+    </div>
+    <label class="f"><input type="checkbox" id="useNames"> 名前を入れて、座席表に名前を出す</label>
+    <div id="nameWrap" class="hide">
+      <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
+      <p class="note">1行に1人。席の数は名前の数に合わせます。</p>
+    </div>
+    <p class="note">「1列に並ぶ席の数」は座席表の横の数です。下の座席表で形を確かめられます。</p>
+    <button class="k-btn k-btn-main d4-wide" id="btnStart" type="button" style="margin-top:10px">この席数で始める</button>
+    <p class="note hide" id="startNote">始めると、いま引いている途中のものは消えます。</p>
+    </div>
+    <button class="k-btn k-btn-sub hide" id="btnEdit" type="button" style="width:100%">席の数を変える</button>
+  </section>
+  <section class="card hide" id="drawCard">
     <div class="draw">
       <div class="who" id="who">下の欄で席数を決めてください</div>
       <div class="hit blank" id="hit">－</div>
@@ -277,27 +303,6 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
   </section>
 
   <section class="card">
-    <h2>席を決める</h2>
-    <div class="row">
-      <div>
-        <label class="f" for="num">席の数</label>
-        <input type="number" id="num" min="2" max="200" value="8" inputmode="numeric">
-      </div>
-      <div>
-        <label class="f" for="cols">横に並べる数</label>
-        <input type="number" id="cols" min="1" max="10" value="4" inputmode="numeric">
-      </div>
-    </div>
-    <label class="f"><input type="checkbox" id="useNames"> 名前を入れて、座席表に名前を出す</label>
-    <div id="nameWrap" class="hide">
-      <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
-      <p class="note">1行に1人。席の数は名前の数に合わせます。</p>
-    </div>
-    <button class="k-btn k-btn-sm" id="btnStart" type="button" style="width:100%;margin-top:10px">この席数で始める</button>
-    <p class="note">始めると、いま引いている途中のものは消えます。</p>
-  </section>
-
-  <section class="card">
     <h2>座席表 <span id="count" style="color:var(--ink-soft);font-size:14px"></span></h2>
     <p class="note" style="margin:0 0 6px">上が奥（上座）です。引いた人から埋まります。</p>
     <div class="seats" id="seats"></div>
@@ -305,7 +310,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <div class="howto">
       <b>使い方</b>
       <ol>
-        <li>席の数と、横に並べる数を決めて「この席数で始める」を押す</li>
+        <li>席の数と、1列に並ぶ席の数を決めて「この席数で始める」を押す</li>
         <li>スマホを1人目に渡して「引く」を押してもらう</li>
         <li>席番号を見たら「次の人へ」を押し、次の人に回す</li>
       </ol>
@@ -326,11 +331,11 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <h3>同じ席が2回出ることはありますか</h3>
     <p>ありません。「この席数で始める」を押したときに席番号をまとめて混ぜ、引くたびにそこから1つずつ取り出します。一度出た席は残りから無くなります。</p>
     <h3>上座はどこですか</h3>
-    <p>座席表の上の段が奥（上座）です。お店の席の形に合わせて「横に並べる数」を変えると、座席表がテーブルの並びに近くなります。</p>
+    <p>座席表の上の段が奥（上座）です。お店の席の形に合わせて「1列に並ぶ席の数」を変えると、座席表がテーブルの並びに近くなります。</p>
     <h3>名前を入れないと使えませんか</h3>
     <p>名前なしでも使えます。席の数だけ決めれば、番号で引けます。名前を入れると、書いた順に名前で案内され、座席表に名前が出ます。</p>
     <h3>何席まで使えますか</h3>
-    <p>名前を入れないときは2〜200席です。名前を入れたときは、名前の数がそのまま席の数になります。横に並べる数は1〜10です。</p>
+    <p>名前を入れないときは2〜200席です。名前を入れたときは、名前の数がそのまま席の数になります。1列に並ぶ席の数は1〜10です。</p>
     <h3>アプリのインストールや登録は要りますか</h3>
     <p>要りません。ブラウザでこのページを開くだけで、無料で使えます。スマホ1台を順番に回して使います。</p>
     <h3>途中で画面を閉じたらどうなりますか</h3>
@@ -429,7 +434,8 @@ function mountAd(){
 }
 
 const KEY = 'ninja-kuji-seki-v1';
-const IDLE_HINT = '下の欄で席数を決めてください';
+const IDLE_HINT = '';
+let editing = false;
 
 let st = null;      // {names, pool, done:[{w,v}], ...}
 let shown = false;  // いま当たりを出しているか
@@ -457,6 +463,7 @@ function setButtons(){
   $('count').textContent = '（' + st.done.length + ' / ' + total() + '人）';
 }
 function idle(msg){
+  $('drawCard').classList.add('hide');
   $('who').textContent = IDLE_HINT;
   $('hit').textContent = '－'; $('hit').className = 'hit blank';
   $('prog').style.width = '0';
@@ -467,7 +474,16 @@ function idle(msg){
 $('btnNext').onclick = () => { shown = false; render(st.pool.length ? '' : '全員ぶん出ました。'); };
 
 function render(msg){
-  if (!st) { idle(msg); $('seats').innerHTML = '<div class="empty">まだ始まっていません</div>'; return; }
+  $('setupBody').classList.toggle('hide', !!st && !editing);
+  $('btnEdit').classList.toggle('hide', !st || editing);
+  $('startNote').classList.toggle('hide', !st);
+  $('setupLead').classList.toggle('hide', !!st && !editing);
+  // 始めたあとは引く欄を上に、席の設定はその下へ
+  const sc = $('setupCard'), dc = $('drawCard');
+  if (st && !editing) { if (sc.previousElementSibling !== dc) sc.parentNode.insertBefore(dc, sc); }
+  else if (dc.previousElementSibling !== sc) sc.parentNode.insertBefore(sc, dc);
+  if (!st) { idle(msg); preview(); return; }
+  $('drawCard').classList.remove('hide');
   const d = st.done.length, left = st.pool.length;
   const hit = $('hit');
   if (shown) {
@@ -492,9 +508,27 @@ function render(msg){
     const w = document.createElement('span'); w.textContent = taken[s] || 'あき';
     c.appendChild(b); c.appendChild(w); g.appendChild(c);
   }
-  $('msg').textContent = msg || '';
+  $('msg').textContent = msg || (shown ? '見たら「次の人へ」を押して、スマホを次の人に渡してください。' : (left ? 'スマホを渡して「引く」を押してもらいます。' : ''));
 }
-$('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); };
+/* 始める前は、入れた席の数と並びで空の座席表を見せる */
+function preview(){
+  const names = $('useNames').checked ? parseNames($('names').value) : [];
+  const n = names.length || Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0));
+  const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
+  const g = $('seats');
+  g.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
+  g.innerHTML = '';
+  for (let i = 1; i <= n; i++) {
+    const c = document.createElement('div'); c.className = 'seat free';
+    const b = document.createElement('b'); b.textContent = i + '番';
+    const w = document.createElement('span'); w.textContent = names[i - 1] ? '' : 'あき';
+    c.appendChild(b); c.appendChild(w); g.appendChild(c);
+  }
+  $('count').textContent = '（' + n + '席・始める前）';
+}
+['num', 'cols', 'names'].forEach(id => $(id).addEventListener('input', () => { if (!st || editing) preview(); }));
+$('btnEdit').onclick = () => { editing = true; render(); preview(); };
+$('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); if (!st || editing) preview(); };
 $('btnDraw').onclick = drawOne;
 function build(n, cols, names){
   const pool = []; for (let i = 1; i <= n; i++) pool.push(i);
@@ -510,9 +544,9 @@ $('btnStart').onclick = () => {
   if (!n || n < 2) { st = null; render('席は2つ以上にしてください。'); return; }
   const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
   st = build(n, cols, names);
-  shown = false; store(KEY, st);
+  shown = false; editing = false; store(KEY, st);
   render(n + '席ぶん用意しました。1人目からどうぞ。');
-  document.querySelector('.draw').scrollIntoView({ block: 'center' });
+  $('drawCard').scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
 $('btnReset').onclick = () => {
   if (!confirm('引いた結果を消して、席を混ぜ直します。よろしいですか。')) return;
