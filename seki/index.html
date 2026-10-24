@@ -158,6 +158,8 @@ label.f{display:block;font-size:14px;font-weight:800;margin:10px 0 4px}
 .seat b{display:block;font-size:14px;color:var(--orange-deep)}
 .seat.free{background:var(--cream-deep);color:var(--ink-soft)}
 .fix{margin:12px 0 0}
+#chartSlot #chart{margin:14px 0 6px;padding:10px 0 0;border-top:1px dashed #c9b89f}
+#chartSlot #chart h2{font-size:16px;margin:0 0 4px}
 .shape{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
 .shape button{font:inherit;font-size:15px;font-weight:700;min-height:48px;border:2px solid var(--k-sumi,#333);border-radius:var(--k-r,10px);background:#fff;color:var(--k-sumi,#333);cursor:pointer}
 .shape button[aria-pressed="true"]{background:var(--k-shu,#c8452c);border-color:var(--k-shu,#c8452c);color:#fff}
@@ -315,6 +317,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
       <button class="k-btn k-btn-sub" id="btnTblAdd" type="button" style="width:100%">＋ テーブルを足す</button>
       <p class="note">席の番号は上座のテーブルから1番、続けてテーブルの順に付きます。人数がテーブルごとに違っても大丈夫です。</p>
     </div>
+    <div id="chartSlot"></div>
     <label class="f"><input type="checkbox" id="useNames"> 名前を入れて、座席表に名前を出す</label>
     <div id="nameWrap" class="hide">
       <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
@@ -348,10 +351,12 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     </div>
   </section>
 
-  <section class="card">
+  <section class="card" id="chartCard">
+    <div id="chart">
     <h2>座席表 <span id="count" style="color:var(--ink-soft);font-size:14px"></span></h2>
     <p class="note" style="margin:0 0 6px">上が奥（上座）です。名前の入った席が決まった席、点線の席はまだ決まっていません。</p>
     <div class="seats" id="seats"></div>
+    </div>
 
     <div class="howto">
       <b>使い方</b>
@@ -547,6 +552,10 @@ function render(msg){
   $('setupBody').classList.toggle('hide', !!st && !editing);
   $('btnEdit').classList.toggle('hide', !st || editing);
   $('startNote').classList.toggle('hide', !st);
+  // 席を決めている間は、座席表を設定のすぐ下に置いて形をその場で見せる
+  const chart = $('chart');
+  if (!st || editing) { if (chart.parentNode !== $('chartSlot')) $('chartSlot').appendChild(chart); }
+  else if (chart.parentNode !== $('chartCard')) $('chartCard').insertBefore(chart, $('chartCard').firstChild);
   $('setupLead').classList.toggle('hide', !!st && !editing);
   // 始めたあとは引く欄を上に、席の設定はその下へ
   const sc = $('setupCard'), dc = $('drawCard');
