@@ -157,6 +157,11 @@ label.f{display:block;font-size:14px;font-weight:800;margin:10px 0 4px}
   font-size:14px;line-height:1.4;min-height:52px;display:flex;flex-direction:column;justify-content:center}
 .seat b{display:block;font-size:14px;color:var(--orange-deep)}
 .seat.free{background:var(--cream-deep);color:var(--ink-soft)}
+.fix{margin:12px 0 0}
+.fix-row{display:grid;grid-template-columns:1fr 6.5em 44px;gap:6px;margin:0 0 6px}
+.fix-row select{font:inherit;font-size:16px;min-height:44px;padding:0 6px;border:2px solid var(--k-sumi,#333);border-radius:var(--k-r,10px);background:#fff;color:var(--k-sumi,#333)}
+.fix-row button{font:inherit;font-size:18px;min-height:44px;border:1.5px solid var(--k-line-soft,#ccc);border-radius:var(--k-r,10px);background:#fff;cursor:pointer}
+.seat .tag{display:inline-block;margin-top:2px;font-size:11px;font-weight:700;color:#fff;background:var(--k-shu,#c8452c);border-radius:6px;padding:0 5px}
 
 /* 使い方 */
 .howto{margin-top:12px;padding:11px 12px;background:var(--cream);border:1px solid var(--line);border-radius:12px}
@@ -225,7 +230,9 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 .item .n{border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);color:var(--k-shu)}
 .seat{border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r)}
 .seat b{color:var(--k-shu)}
-.seat.free{background:var(--k-kinari);color:#5b4a3e}
+.seat.free{background:transparent;border-style:dashed;border-color:#b9a894;color:#8a7a6a}
+.seat.free b{color:#8a7a6a}
+.seat.got{background:var(--k-kinari)}
 .numchip{border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-s);font-family:var(--k-bold);font-weight:400}
 .numchip.on{border-color:var(--k-sumi);background:var(--k-shu);color:#fff}
 .numchip.off{opacity:.45;box-shadow:none;transform:translate(3px,3px)}
@@ -284,6 +291,12 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <div id="nameWrap" class="hide">
       <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
       <p class="note">1行に1人。席の数は名前の数に合わせます。引くときは、自分の名前を押してから「引く」を押します（順番は自由）。</p>
+      <div class="fix">
+        <b class="f">先に席を決めておく人（なくてもよい）</b>
+        <p class="note" style="margin:0 0 6px">幹事や主賓など、席が決まっている人はここで選びます。その人はくじを引きません。</p>
+        <div id="fixRows"></div>
+        <button class="k-btn k-btn-sub" id="btnFixAdd" type="button" style="width:100%">＋ 席を決めておく人を足す</button>
+      </div>
     </div>
     <p class="note">「1列に並ぶ席の数」は座席表の横の数です。下の座席表で形を確かめられます。</p>
     <button class="k-btn k-btn-main d4-wide" id="btnStart" type="button" style="margin-top:10px">この席数で始める</button>
@@ -308,7 +321,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 
   <section class="card">
     <h2>座席表 <span id="count" style="color:var(--ink-soft);font-size:14px"></span></h2>
-    <p class="note" style="margin:0 0 6px">上が奥（上座）です。引いた人から埋まります。</p>
+    <p class="note" style="margin:0 0 6px">上が奥（上座）です。名前の入った席が決まった席、点線の席はまだ決まっていません。</p>
     <div class="seats" id="seats"></div>
 
     <div class="howto">
@@ -522,44 +535,86 @@ function render(msg){
   }
   setButtons();
   renderPicks();
-  // 座席表。引いた人だけ名前が入り、まだの席は空のまま。
-  const taken = {};
-  st.done.forEach(r => { taken[r.v] = r.w; });
-  const g = $('seats');
-  g.style.gridTemplateColumns = 'repeat(' + st.cols + ',1fr)';
-  g.innerHTML = '';
-  for (let s = 1; s <= total(); s++) {
-    const c = document.createElement('div');
-    c.className = 'seat' + (taken[s] ? '' : ' free');
-    const b = document.createElement('b'); b.textContent = s + '番';
-    const w = document.createElement('span'); w.textContent = taken[s] || 'あき';
-    c.appendChild(b); c.appendChild(w); g.appendChild(c);
-  }
+  drawSeats(total(), st.cols, st.done);
   $('msg').textContent = msg || (st.names.length && !shown ? '' : shown ? '見たら「次の人へ」を押して、スマホを次の人に渡してください。' : (left ? 'スマホを渡して「引く」を押してもらいます。' : ''));
 }
-/* 始める前は、入れた席の数と並びで空の座席表を見せる */
-function preview(){
-  const names = $('useNames').checked ? parseNames($('names').value) : [];
-  const n = names.length || Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0));
-  const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
+/* 座席表。決まった席は名前（先に決めた席には「指定」）、まだの席は点線で番号だけ */
+function drawSeats(n, cols, rows){
+  const taken = {};
+  rows.forEach(r => { taken[r.v] = r; });
   const g = $('seats');
   g.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)';
   g.innerHTML = '';
   for (let i = 1; i <= n; i++) {
-    const c = document.createElement('div'); c.className = 'seat free';
-    const b = document.createElement('b'); b.textContent = i + '番';
-    const w = document.createElement('span'); w.textContent = names[i - 1] ? '' : 'あき';
-    c.appendChild(b); c.appendChild(w); g.appendChild(c);
+    const r = taken[i];
+    const c = document.createElement('div');
+    c.className = 'seat ' + (r ? 'got' : 'free');
+    const b = document.createElement('b'); b.textContent = i + '番'; c.appendChild(b);
+    if (r) {
+      const w = document.createElement('span'); w.textContent = r.w; c.appendChild(w);
+      if (r.fixed) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = '指定'; c.appendChild(t); }
+    }
+    g.appendChild(c);
   }
+}
+/* 先に席を決めておく人。名前と席番号の組を画面で選ぶ */
+let fixDraft = [];  // [{w, v}]
+function draftSize(){
+  const names = $('useNames').checked ? parseNames($('names').value) : [];
+  return { names: names, n: names.length || Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0)) };
+}
+function renderFix(){
+  const { names, n } = draftSize();
+  const box = $('fixRows'); box.innerHTML = '';
+  fixDraft.forEach((f, idx) => {
+    const row = document.createElement('div'); row.className = 'fix-row';
+    const sn = document.createElement('select'); sn.setAttribute('aria-label', '名前');
+    sn.appendChild(new Option('名前を選ぶ', ''));
+    names.forEach(nm => sn.appendChild(new Option(nm, nm, false, nm === f.w)));
+    const sv = document.createElement('select'); sv.setAttribute('aria-label', '席の番号');
+    sv.appendChild(new Option('席', ''));
+    for (let i = 1; i <= n; i++) sv.appendChild(new Option(i + '番', String(i), false, i === f.v));
+    const del = document.createElement('button'); del.type = 'button'; del.textContent = '×'; del.setAttribute('aria-label', 'この行を消す');
+    sn.onchange = () => { f.w = sn.value; preview(); };
+    sv.onchange = () => { f.v = parseInt(sv.value, 10) || 0; preview(); };
+    del.onclick = () => { fixDraft.splice(idx, 1); renderFix(); preview(); };
+    row.appendChild(sn); row.appendChild(sv); row.appendChild(del); box.appendChild(row);
+  });
+}
+/* 選び終わった組だけを取り出し、同じ人・同じ席の重なりを調べる */
+function readFix(names, n){
+  const out = [], wSeen = {}, vSeen = {};
+  for (const f of fixDraft) {
+    if (!f.w || !f.v || names.indexOf(f.w) < 0 || f.v > n) continue;
+    if (wSeen[f.w]) return { err: f.w + 'さんが2回選ばれています。' };
+    if (vSeen[f.v]) return { err: f.v + '番の席が2人に選ばれています。' };
+    wSeen[f.w] = vSeen[f.v] = 1;
+    out.push({ w: f.w, v: f.v, fixed: true });
+  }
+  return { list: out };
+}
+$('btnFixAdd').onclick = () => {
+  if (draftSize().names.length < 2) { $('msg').textContent = ''; alert('先に名前を2人以上入れてください。'); return; }
+  fixDraft.push({ w: '', v: 0 }); renderFix();
+};
+/* 始める前は、入れた席の数と並びで座席表を見せる */
+function preview(){
+  const { names, n } = draftSize();
+  const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
+  const f = readFix(names, n);
+  drawSeats(n, cols, f.list || []);
   $('count').textContent = '（' + n + '席・始める前）';
 }
-['num', 'cols', 'names'].forEach(id => $(id).addEventListener('input', () => { if (!st || editing) preview(); }));
-$('btnEdit').onclick = () => { editing = true; render(); preview(); };
-$('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); if (!st || editing) preview(); };
+['num', 'cols'].forEach(id => $(id).addEventListener('input', () => { if (!st || editing) preview(); }));
+$('names').addEventListener('input', () => { if (!st || editing) { renderFix(); preview(); } });
+$('btnEdit').onclick = () => { editing = true; render(); renderFix(); preview(); };
+$('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); if (!st || editing) { renderFix(); preview(); } };
 $('btnDraw').onclick = drawOne;
-function build(n, cols, names){
-  const pool = []; for (let i = 1; i <= n; i++) pool.push(i);
-  return { names: names, cols: cols, pool: shuffle(pool), done: [] };
+function build(n, cols, names, fixed){
+  fixed = fixed || [];
+  const used = {}; fixed.forEach(f => { used[f.v] = 1; });
+  const pool = []; for (let i = 1; i <= n; i++) if (!used[i]) pool.push(i);
+  return { names: names, cols: cols, fixed: fixed, pool: shuffle(pool), done: fixed.map(f => ({ w: f.w, v: f.v, fixed: true })) };
 }
 $('btnStart').onclick = () => {
   let names = [];
@@ -570,24 +625,29 @@ $('btnStart').onclick = () => {
   const n = names.length || Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0));
   if (!n || n < 2) { st = null; render('席は2つ以上にしてください。'); return; }
   const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
-  st = build(n, cols, names);
+  const f = readFix(names, n);
+  if (f.err) { render(f.err); return; }
+  if (names.length && f.list.length >= names.length) { render('くじを引く人が残りません。先に決める人を減らしてください。'); return; }
+  st = build(n, cols, names, f.list);
   shown = false; editing = false; pick = ''; store(KEY, st);
   render(names.length ? n + '席ぶん用意しました。来た人から自分の名前を押して引きます。' : n + '席ぶん用意しました。1人目からどうぞ。');
   $('drawCard').scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
 $('btnReset').onclick = () => {
   if (!confirm('引いた結果を消して、席を混ぜ直します。よろしいですか。')) return;
-  st = build(total(), st.cols, st.names);
+  st = build(total(), st.cols, st.names, st.fixed);
   shown = false; pick = ''; store(KEY, st); render('混ぜ直しました。');
 };
 
 st = restore(KEY);
 if (st && Array.isArray(st.pool) && Array.isArray(st.done)) {
-  st.names = st.names || []; st.cols = st.cols || 4;
+  st.names = st.names || []; st.cols = st.cols || 4; st.fixed = st.fixed || [];
+  fixDraft = st.fixed.map(f => ({ w: f.w, v: f.v }));
   if (st.names.length) { $('useNames').checked = true; $('nameWrap').classList.remove('hide'); $('names').value = st.names.join('\n'); }
   $('num').value = total() || 8; $('cols').value = st.cols;
   render(st.pool.length ? (st.names.length ? '前回の続きです。まだの人は自分の名前を押してください。' : '前回の続きです。' + whoNext() + 'からどうぞ。') : '前回のぶんは全員引き終わっています。');
 } else { st = null; render(); }
+renderFix();
 mountAd();
 
 </script>
