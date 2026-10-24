@@ -55,7 +55,7 @@
    "name": "名前を入れないと使えませんか",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "名前なしでも使えます。席の数だけ決めれば、番号で引けます。名前を入れると、書いた順に名前で案内され、座席表に名前が出ます。"
+    "text": "名前なしでも使えます。席の数だけ決めれば、番号で引けます。名前を入れると、来た人から自分の名前を選んで引けます（順番は自由）。座席表に名前が出ます。"
    }
   },
   {
@@ -122,6 +122,9 @@ button{font:inherit;cursor:pointer}
 .btn2{border:2px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font-weight:700;font-size:14px}
 .btn:disabled,.btn2:disabled{opacity:.4;cursor:not-allowed}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.picks{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0 10px}
+.picks button{font:inherit;font-size:15px;font-weight:700;min-height:44px;padding:0 14px;border:var(--k-bw-s,1.5px) solid var(--k-sumi,#333);border-radius:var(--k-r,10px);background:#fff;color:var(--k-sumi,#333);cursor:pointer}
+.picks button[aria-pressed="true"]{background:var(--k-shu,#c8452c);border-color:var(--k-shu,#c8452c);color:#fff}
 textarea,input[type=text],input[type=number],select{width:100%;border:2px solid var(--line);border-radius:12px;
   padding:11px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
 textarea{min-height:120px;line-height:1.9;resize:vertical}
@@ -280,7 +283,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <label class="f"><input type="checkbox" id="useNames"> 名前を入れて、座席表に名前を出す</label>
     <div id="nameWrap" class="hide">
       <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
-      <p class="note">1行に1人。席の数は名前の数に合わせます。</p>
+      <p class="note">1行に1人。席の数は名前の数に合わせます。引くときは、自分の名前を押してから「引く」を押します（順番は自由）。</p>
     </div>
     <p class="note">「1列に並ぶ席の数」は座席表の横の数です。下の座席表で形を確かめられます。</p>
     <button class="k-btn k-btn-main d4-wide" id="btnStart" type="button" style="margin-top:10px">この席数で始める</button>
@@ -291,6 +294,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
   <section class="card hide" id="drawCard">
     <div class="draw">
       <div class="who" id="who">下の欄で席数を決めてください</div>
+      <div class="picks hide" id="picks" role="group" aria-label="自分の名前"></div>
       <div class="hit blank" id="hit">－</div>
       <div class="k-bar kuji-bar"><i id="prog" style="width:0"></i></div>
       <button class="k-btn k-btn-main d4-wide" id="btnDraw" type="button" disabled>引く</button>
@@ -333,7 +337,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <h3>上座はどこですか</h3>
     <p>座席表の上の段が奥（上座）です。お店の席の形に合わせて「1列に並ぶ席の数」を変えると、座席表がテーブルの並びに近くなります。</p>
     <h3>名前を入れないと使えませんか</h3>
-    <p>名前なしでも使えます。席の数だけ決めれば、番号で引けます。名前を入れると、書いた順に名前で案内され、座席表に名前が出ます。</p>
+    <p>名前なしでも使えます。席の数だけ決めれば、番号で引けます。名前を入れると、来た人から自分の名前を選んで引けます（順番は自由）。座席表に名前が出ます。</p>
     <h3>何席まで使えますか</h3>
     <p>名前を入れないときは2〜200席です。名前を入れたときは、名前の数がそのまま席の数になります。1列に並ぶ席の数は1〜10です。</p>
     <h3>アプリのインストールや登録は要りますか</h3>
@@ -441,12 +445,32 @@ let st = null;      // {names, pool, done:[{w,v}], ...}
 let shown = false;  // いま当たりを出しているか
 
 function total(){ return st ? st.pool.length + st.done.length : 0; }
+let pick = '';      // 名前ありのとき、いま選ばれている名前
+function leftNames(){
+  const got = {}; st.done.forEach(r => { got[r.w] = 1; });
+  return st.names.filter(n => !got[n]);
+}
 function whoNext(){
-  const i = st.done.length;
-  return st.names.length ? st.names[i] : (i + 1) + '人目';
+  if (st.names.length) return pick;
+  return (st.done.length + 1) + '人目';
+}
+function renderPicks(){
+  const box = $('picks');
+  const on = !!st && st.names.length > 0 && !shown && st.pool.length > 0;
+  box.classList.toggle('hide', !on);
+  box.innerHTML = '';
+  if (!on) return;
+  leftNames().forEach(n => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = n;
+    b.setAttribute('aria-pressed', n === pick ? 'true' : 'false');
+    b.onclick = () => { pick = n; render(); };
+    box.appendChild(b);
+  });
 }
 function drawOne(){
   if (!st || !st.pool.length || shown) return;
+  if (st.names.length && !pick) return;
   st.done.push({ w: whoNext(), v: st.pool.pop() });
   shown = true;
   store(KEY, st);
@@ -455,7 +479,7 @@ function drawOne(){
 }
 function setButtons(){
   const left = st.pool.length;
-  $('btnDraw').disabled = shown || !left;
+  $('btnDraw').disabled = shown || !left || (st.names.length > 0 && !pick);
   $('btnDraw').textContent = left ? '引く' : '全員おわり';
   $('btnNext').disabled = !shown;
   $('btnReset').disabled = false;
@@ -471,7 +495,7 @@ function idle(msg){
   $('count').textContent = '';
   $('msg').textContent = msg || '';
 }
-$('btnNext').onclick = () => { shown = false; render(st.pool.length ? '' : '全員ぶん出ました。'); };
+$('btnNext').onclick = () => { shown = false; pick = ''; render(st.pool.length ? '' : '全員ぶん出ました。'); };
 
 function render(msg){
   $('setupBody').classList.toggle('hide', !!st && !editing);
@@ -482,7 +506,7 @@ function render(msg){
   const sc = $('setupCard'), dc = $('drawCard');
   if (st && !editing) { if (sc.previousElementSibling !== dc) sc.parentNode.insertBefore(dc, sc); }
   else if (dc.previousElementSibling !== sc) sc.parentNode.insertBefore(sc, dc);
-  if (!st) { idle(msg); preview(); return; }
+  if (!st) { idle(msg); renderPicks(); preview(); return; }
   $('drawCard').classList.remove('hide');
   const d = st.done.length, left = st.pool.length;
   const hit = $('hit');
@@ -491,10 +515,13 @@ function render(msg){
     hit.textContent = st.done[d - 1].v + '番';
     hit.className = 'hit';
   } else {
-    $('who').textContent = left ? (whoNext() + '　どうぞ') : '全員引き終わりました';
+    $('who').textContent = !left ? '全員引き終わりました'
+      : st.names.length ? (pick ? pick + 'さん、「引く」を押してください' : '自分の名前を押してください')
+      : (whoNext() + '　どうぞ');
     hit.textContent = '－'; hit.className = 'hit blank';
   }
   setButtons();
+  renderPicks();
   // 座席表。引いた人だけ名前が入り、まだの席は空のまま。
   const taken = {};
   st.done.forEach(r => { taken[r.v] = r.w; });
@@ -508,7 +535,7 @@ function render(msg){
     const w = document.createElement('span'); w.textContent = taken[s] || 'あき';
     c.appendChild(b); c.appendChild(w); g.appendChild(c);
   }
-  $('msg').textContent = msg || (shown ? '見たら「次の人へ」を押して、スマホを次の人に渡してください。' : (left ? 'スマホを渡して「引く」を押してもらいます。' : ''));
+  $('msg').textContent = msg || (st.names.length && !shown ? '' : shown ? '見たら「次の人へ」を押して、スマホを次の人に渡してください。' : (left ? 'スマホを渡して「引く」を押してもらいます。' : ''));
 }
 /* 始める前は、入れた席の数と並びで空の座席表を見せる */
 function preview(){
@@ -544,14 +571,14 @@ $('btnStart').onclick = () => {
   if (!n || n < 2) { st = null; render('席は2つ以上にしてください。'); return; }
   const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
   st = build(n, cols, names);
-  shown = false; editing = false; store(KEY, st);
-  render(n + '席ぶん用意しました。1人目からどうぞ。');
+  shown = false; editing = false; pick = ''; store(KEY, st);
+  render(names.length ? n + '席ぶん用意しました。来た人から自分の名前を押して引きます。' : n + '席ぶん用意しました。1人目からどうぞ。');
   $('drawCard').scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
 $('btnReset').onclick = () => {
   if (!confirm('引いた結果を消して、席を混ぜ直します。よろしいですか。')) return;
   st = build(total(), st.cols, st.names);
-  shown = false; store(KEY, st); render('混ぜ直しました。');
+  shown = false; pick = ''; store(KEY, st); render('混ぜ直しました。');
 };
 
 st = restore(KEY);
@@ -559,7 +586,7 @@ if (st && Array.isArray(st.pool) && Array.isArray(st.done)) {
   st.names = st.names || []; st.cols = st.cols || 4;
   if (st.names.length) { $('useNames').checked = true; $('nameWrap').classList.remove('hide'); $('names').value = st.names.join('\n'); }
   $('num').value = total() || 8; $('cols').value = st.cols;
-  render(st.pool.length ? '前回の続きです。' + whoNext() + 'からどうぞ。' : '前回のぶんは全員引き終わっています。');
+  render(st.pool.length ? (st.names.length ? '前回の続きです。まだの人は自分の名前を押してください。' : '前回の続きです。' + whoNext() + 'からどうぞ。') : '前回のぶんは全員引き終わっています。');
 } else { st = null; render(); }
 mountAd();
 
