@@ -70,6 +70,8 @@ textarea,input[type=text],input[type=number],select{width:100%;border:2px solid 
   padding:11px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
 textarea{min-height:120px;line-height:1.9;resize:vertical}
 label.f{display:block;font-size:14px;font-weight:800;margin:10px 0 4px}
+label.f:has(input[type=checkbox]){display:flex;align-items:center;gap:8px;min-height:44px;margin:4px 0}
+label.f input[type=checkbox]{width:20px;height:20px;margin:0;flex:none}
 .note{font-size:14px;color:var(--ink-soft);margin:8px 0 0}
 .hide{display:none!important}
 
@@ -199,10 +201,10 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 <main>
   <section class="card">
     <div class="draw">
-      <div class="who" id="who">下の欄でチーム数を決めてください</div>
+      <div class="who" id="who">このまま「引く」で始まります（変えるなら下の欄で）</div>
       <div class="hit blank" id="hit">－</div>
       <div class="k-bar kuji-bar"><i id="prog" style="width:0"></i></div>
-      <button class="k-btn k-btn-main d4-wide" id="btnDraw" type="button" disabled>引く</button>
+      <button class="k-btn k-btn-main d4-wide" id="btnDraw" type="button">引く</button>
       <div class="row" style="margin-top:8px">
         <button class="k-btn k-btn-sub" id="btnNext" type="button" disabled>次の人へ</button>
         <button class="k-btn k-btn-sub" id="btnReset" type="button" disabled>最初から</button>
@@ -339,7 +341,7 @@ function mountAd(){
 }
 
 const KEY = 'ninja-kuji-team-v1';
-const IDLE_HINT = '下の欄でチーム数を決めてください';
+const IDLE_HINT = 'このまま「引く」で始まります（変えるなら下の欄で）';   // 2026-10-25 最初の「引く」を押せないままにしない（押すと下の設定で始める）
 const TEAM_NAME = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
 let st = null;      // {names, pool, done:[{w,v}], ...}
@@ -371,7 +373,8 @@ function idle(msg){
   $('who').textContent = IDLE_HINT;
   $('hit').textContent = '－'; $('hit').className = 'hit blank';
   $('prog').style.width = '0';
-  $('btnDraw').disabled = $('btnNext').disabled = $('btnReset').disabled = true;
+  $('btnNext').disabled = $('btnReset').disabled = true;
+  $('btnDraw').disabled = false; $('btnDraw').textContent = '引く';
   $('count').textContent = '';
   $('msg').textContent = msg || '';
 }
@@ -415,7 +418,10 @@ function render(msg){
   $('msg').textContent = msg || '';
 }
 $('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); };
-$('btnDraw').onclick = drawOne;
+$('btnDraw').onclick = () => {
+  if (!st) { $('btnStart').click(); if (!st) return; }   // まだ始めていなければ、下の設定のまま始めて1人目を引く
+  drawOne();
+};
 $('btnStart').onclick = () => {
   let names = [];
   if ($('useNames').checked) {
