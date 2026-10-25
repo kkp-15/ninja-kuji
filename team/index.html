@@ -129,6 +129,7 @@ label.f input[type=checkbox]{width:20px;height:20px;margin:0;flex:none}
 body { background: #fff; }
 section.card, div.draw, div.bar, #btnDraw, #btnStart, #list, #all, div.howto { border-radius: 8px; }
 #prog, #btnNext, #btnReset { border-radius: 6px; }
+#btnNext{display:none}
 /* ===== 2026-10-19 共通部品 D4（ストリート和忍者）に見た目をそろえる =====
    色・ふち・影・書体だけ（kit/kit.css の部品を使う）。並び・操作・GA4・広告・JSON-LD・title は変えない。 */
 body.k-page{background:var(--k-surface);color:var(--k-sumi)}
@@ -201,7 +202,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 <main>
   <section class="card">
     <div class="draw">
-      <div class="who" id="who">このまま「引く」で始まります（変えるなら下の欄で）</div>
+      <div class="who" id="who">「引く」で始まります（設定は下）</div>
       <div class="hit blank" id="hit">－</div>
       <div class="k-bar kuji-bar"><i id="prog" style="width:0"></i></div>
       <button class="k-btn k-btn-main d4-wide" id="btnDraw" type="button">引く</button>
@@ -230,7 +231,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
       <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
       <p class="note">1行に1人。人数は名前の数に合わせます。</p>
     </div>
-    <button class="k-btn k-btn-sm" id="btnStart" type="button" style="width:100%;margin-top:10px">この分け方で始める</button>
+    <button class="k-btn k-btn-sub" id="btnStart" type="button" style="width:100%;margin-top:10px">この分け方で始める</button>
     <p class="note">人数が割り切れないときは、1人差までに収めます。</p>
   </section>
 
@@ -341,7 +342,7 @@ function mountAd(){
 }
 
 const KEY = 'ninja-kuji-team-v1';
-const IDLE_HINT = 'このまま「引く」で始まります（変えるなら下の欄で）';   // 2026-10-25 最初の「引く」を押せないままにしない（押すと下の設定で始める）
+const IDLE_HINT = '「引く」で始まります（設定は下）';   // 2026-10-25 最初の「引く」を押せないままにしない（押すと下の設定で始める）
 const TEAM_NAME = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
 let st = null;      // {names, pool, done:[{w,v}], ...}
@@ -362,8 +363,9 @@ function drawOne(){
 }
 function setButtons(){
   const left = st.pool.length;
-  $('btnDraw').disabled = shown || !left;
-  $('btnDraw').textContent = left ? '引く' : '全員おわり';
+  // 2026-10-25 主ボタンは1つ。引いたら同じ場所が「次の人へ」に変わる（別の「次の人へ」ボタンは隠す）
+  $('btnDraw').disabled = !shown && !left;
+  $('btnDraw').textContent = shown ? (left ? '次の人へ' : '次へ') : (left ? '引く' : '全員おわり');
   $('btnNext').disabled = !shown;
   $('btnReset').disabled = false;
   $('prog').style.width = total() ? (st.done.length / total() * 100) + '%' : '0';
@@ -418,7 +420,10 @@ function render(msg){
   $('msg').textContent = msg || '';
 }
 $('useNames').onchange = (e) => { $('nameWrap').classList.toggle('hide', !e.target.checked); };
+let drawnAt = 0;
 $('btnDraw').onclick = () => {
+  if (shown) { if (Date.now() - drawnAt < 700) return; $('btnNext').onclick(); return; }   // 2回押しで、見る前に次へ進まないように
+  drawnAt = Date.now();
   if (!st) { $('btnStart').click(); if (!st) return; }   // まだ始めていなければ、下の設定のまま始めて1人目を引く
   drawOne();
 };
