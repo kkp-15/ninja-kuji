@@ -124,6 +124,7 @@ button{font:inherit;cursor:pointer}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .ppl{margin:0 0 6px}
 .stepper{display:flex;align-items:center;gap:8px}
+.picks button.anon{border-style:dashed}
 .stepper button{font:inherit;font-size:24px;font-weight:800;width:52px;height:52px;border:2px solid var(--k-sumi,#333);border-radius:var(--k-r,10px);background:#fff;color:var(--k-sumi,#333);cursor:pointer}
 .stepper input{font:inherit;font-size:28px;font-weight:800;width:4.2em;height:52px;text-align:center;border:2px solid var(--k-sumi,#333);border-radius:var(--k-r,10px);box-sizing:border-box}
 .stepper .unit{font-size:18px;font-weight:700}
@@ -320,7 +321,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
     <div id="nameWrap" class="hide">
       <textarea id="names" placeholder="たなか&#10;すずき&#10;さとう"></textarea>
       <p class="note" id="nameCount" style="margin:4px 0 0;font-weight:700"></p>
-      <p class="note">1行に1人。名前を入れると、名前の数が人数になります。</p>
+      <p class="note">1行に1人。全員でなくても大丈夫です。名前のない人は「名前なし」で引きます。</p>
       <div class="fix">
         <b class="f">先に席を決めておく人（なくてもよい）</b>
         <p class="note" style="margin:0 0 6px">幹事や主賓など。その人はくじを引きません。</p>
@@ -522,15 +523,17 @@ let shown = false;  // いま当たりを出しているか
 function total(){ return st ? st.pool.length + st.done.length : 0; }
 /* まだ引いていない人の数。名前ありで席が余るときは名前の残りで数える */
 /* 引く人の数。名前があれば名前の数、なければ入れた人数（席が多いときは残りは空席） */
-function peopleOf(o){ return o.names.length || o.people || (o.pool.length + o.done.length); }
-function remaining(){ return !st ? 0 : st.names.length ? leftNames().length : Math.max(0, Math.min(st.pool.length, peopleOf(st) - st.done.length)); }
+function peopleOf(o){ return Math.max(o.people || 0, o.names.length) || (o.pool.length + o.done.length); }
+/* 名前を入れていない人の残り（人数のうち、名前の欄にない人） */
+function anonLeft(){ return !st || !st.names.length ? 0 : Math.max(0, peopleOf(st) - st.names.length - st.done.filter(r => r.anon).length); }
+function remaining(){ return !st ? 0 : st.names.length ? Math.min(st.pool.length, leftNames().length + anonLeft()) : Math.max(0, Math.min(st.pool.length, peopleOf(st) - st.done.length)); }
 let pick = '';      // 名前ありのとき、いま選ばれている名前
 function leftNames(){
   const got = {}; st.done.forEach(r => { got[r.w] = 1; });
   return st.names.filter(n => !got[n]);
 }
 function whoNext(){
-  if (st.names.length) return pick;
+  if (st.names.length) return pick === '__anon' ? '名前なし' + (st.done.filter(r => r.anon).length + 1) : pick;
   return (st.done.length + 1) + '人目';
 }
 function renderPicks(){
@@ -546,11 +549,20 @@ function renderPicks(){
     b.onclick = () => { pick = n; render(); $('btnDraw').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
     box.appendChild(b);
   });
+  // 名前を入れていない人は「名前なし」で引く
+  if (anonLeft() > 0) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'anon'; b.textContent = '名前なし（あと' + anonLeft() + '人）';
+    b.setAttribute('aria-pressed', pick === '__anon' ? 'true' : 'false');
+    b.onclick = () => { pick = '__anon'; render(); $('btnDraw').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
+    box.appendChild(b);
+  }
 }
 function drawOne(){
   if (!st || !remaining() || shown) return;
   if (st.names.length && !pick) return;
-  st.done.push({ w: whoNext(), v: st.pool.pop() });
+  const r = { w: whoNext(), v: st.pool.pop() }; if (pick === '__anon') r.anon = true;
+  st.done.push(r);
   shown = true;
   store(KEY, st);
   render();
@@ -606,7 +618,7 @@ function render(msg){
     hit.className = 'hit';
   } else {
     $('who').textContent = !left ? '全員引き終わりました'
-      : st.names.length ? (pick ? pick + 'さん、「引く」を押してください' : '自分の名前を押してください')
+      : st.names.length ? (pick === '__anon' ? '名前なしの人、「引く」を押してください' : pick ? pick + 'さん、「引く」を押してください' : '自分の名前を押してください')
       : (whoNext() + '　どうぞ');
     hit.textContent = '－'; hit.className = 'hit blank';
     $('hitSub').textContent = '';
@@ -740,7 +752,7 @@ let numTouched = false, colsTouched = false;
 function pplValue(){ return Math.max(2, Math.min(200, parseInt($('ppl').value, 10) || 0)); }
 function draftSize(){
   const names = $('useNames').checked ? parseNames($('names').value) : [];
-  const people = names.length || pplValue();
+  const people = Math.max(names.length, pplValue());
   if (shape === 'multi') { const tb = orderTables(tblDraft); return { names: names, people: people, n: tb.reduce((a, t) => a + t.k, 0), tables: tb }; }
   const typed = Math.max(2, Math.min(200, parseInt($('num').value, 10) || 0));
   const n = numTouched ? Math.max(people, typed) : people;
@@ -778,7 +790,7 @@ function readFix(names, n){
   return { list: out };
 }
 $('btnFixAdd').onclick = () => {
-  if (draftSize().names.length < 2) { setupErr('先に上の欄に名前を2人以上入れてください。'); return; }
+  if (draftSize().names.length < 1) { setupErr('先に上の欄に名前を入れてください。'); return; }
   fixDraft.push({ w: '', v: 0 }); renderFix();
 };
 /* 始める前は、入れた席の数と並びで座席表を見せる */
@@ -787,11 +799,10 @@ function preview(){
   const { names, n, people } = draftSize();
   // 人数に合わせて欄の数を見せる（自分で変えた欄はそのまま）
   const useN = $('useNames').checked && names.length > 0;
-  $('ppl').disabled = useN; $('pplMinus').disabled = $('pplPlus').disabled = useN;
-  if (useN) $('ppl').value = names.length;
+  if (useN && names.length > pplValue()) $('ppl').value = names.length;
   if (!numTouched || parseInt($('num').value, 10) < people) $('num').value = n;
   if (!colsTouched) $('cols').value = Math.max(1, Math.min(10, Math.ceil(n / 2)));
-  $('pplNote').textContent = (useN ? '名前の数で' + people + '人です。' : '')
+  $('pplNote').textContent = (useN ? '名前' + names.length + '人' + (people > names.length ? '・名前なし' + (people - names.length) + '人' : '') + '。' : '')
     + (shape === 'multi' ? '席は' + n + '席' + (n < people ? '。' + (people - n) + '席足りません' : n > people ? '（' + (n - people) + '席は空席）' : '') : (n > people ? '席は' + n + '席（' + (n - people) + '席は空席）' : ''));
   const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
   const f = readFix(names, n);
@@ -820,7 +831,7 @@ $('btnDraw').onclick = drawOne;
 /* ボタン1つで、まだの人全員に席を割り当てる */
 $('btnAll').onclick = () => {
   if (!st || shown || !remaining()) return;
-  if (st.names.length) leftNames().forEach(n => { st.done.push({ w: n, v: st.pool.pop() }); });
+  if (st.names.length) { leftNames().forEach(n => { st.done.push({ w: n, v: st.pool.pop() }); }); while (anonLeft() > 0 && st.pool.length) st.done.push({ w: '名前なし' + (st.done.filter(r => r.anon).length + 1), v: st.pool.pop(), anon: true }); }
   else while (remaining()) st.done.push({ w: (st.done.length + 1) + '人目', v: st.pool.pop() });
   pick = ''; store(KEY, st);
   render('全員の席が決まりました。下の座席表を見てください。');
@@ -847,7 +858,7 @@ $('btnStart').onclick = () => {
   let names = [];
   if ($('useNames').checked) {
     names = parseNames($('names').value);
-    if (names.length < 2) { setupErr('名前を2人ぶん以上入れてください。'); return; }
+    if (names.length < 1) { setupErr('名前を1人以上入れてください（名前を使わないなら、チェックを外してください）。'); return; }
   }
   const { n, tables, people } = draftSize();
   if (!n || n < 2) { setupErr('席は2つ以上にしてください。'); return; }
@@ -855,7 +866,7 @@ $('btnStart').onclick = () => {
   const cols = Math.max(1, Math.min(10, parseInt($('cols').value, 10) || 4));
   const f = readFix(names, n);
   if (f.err) { setupErr(f.err); return; }
-  if (names.length && f.list.length >= names.length) { setupErr('全員の席が先に決まっていて、くじを引く人が残りません。先に決める人を減らしてください。'); return; }
+  if (names.length && f.list.length >= people) { setupErr('全員の席が先に決まっていて、くじを引く人が残りません。先に決める人を減らしてください。'); return; }
   st = build(n, cols, names, f.list, tables, people);
   shown = false; editing = false; pick = ''; store(KEY, st); setupErr('');
   const seatNote = n > people ? '（席' + n + '・空席' + (n - people) + '）' : '';
