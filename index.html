@@ -331,7 +331,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
   </section>
 
   <section class="card">
-    <h2>引いた結果 <span id="count" style="color:var(--ink-soft);font-size:14px"></span></h2>
+    <h2 id="result" style="scroll-margin-top:12px">引いた結果 <span id="count" style="color:var(--ink-soft);font-size:14px"></span></h2>
     <div class="list" id="list"><div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div></div>
 
     <label class="f" style="margin-top:12px">まだ出ていない数字</label>
@@ -486,8 +486,9 @@ function drawOne(){
 function setButtons(){
   const left = st.pool.length;
   // 2026-10-25 主ボタンは1つ。引いたら同じ場所が「次の人へ」に変わる（別の「次の人へ」ボタンは隠す）
-  $('btnDraw').disabled = !shown && !left;
-  $('btnDraw').textContent = shown ? (left ? '次の人へ' : '次へ') : (left ? '引く' : '全員おわり');
+  // 2026-11-09 全員引き終わったら「結果を見る」で一覧へ（確認待ち78 A）
+  $('btnDraw').disabled = false;
+  $('btnDraw').textContent = shown ? (left ? '次の人へ' : '次へ') : (left ? '引く' : '結果を見る');
   $('btnNext').disabled = !shown;
   $('btnReset').disabled = false;
   $('prog').style.width = total() ? (st.done.length / total() * 100) + '%' : '0';
@@ -587,6 +588,7 @@ function render(msg){
 let drawnAt = 0;
 $('btnDraw').onclick = () => {
   if (shown) { if (Date.now() - drawnAt < 700) return; $('btnNext').onclick(); return; }   // 2回押しで、見る前に次へ進まないように
+  if (st && !st.pool.length) { const r = $('list').closest('section'); if (r) r.scrollIntoView({ behavior: 'smooth', block: 'start' }); if (typeof gtag === 'function') gtag('event', 'kuji_result_view'); return; }
   drawnAt = Date.now();
   if (!st) { $('btnStart').click(); if (!st) return; }   // まだ始めていなければ、下の設定のまま始めて1人目を引く
   drawOne();
