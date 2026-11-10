@@ -273,12 +273,20 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 .k-tag,.k-upd,.k-result small,.k-install-t span,.k-teaser-asof,.k-teaser-host .mt-asof,.k-teaser-host .mt-badge,.k-seg>button small,.k-seg>label small{font-size:14px}
 </style>
 <!-- kkp-rel-d4:end -->
+
+<style id="trial-less-ai">
+/* 11/10 AIっぽさを減らす（二重の囲みをやめる・設定と結果は細線で区切る） */
+.draw{border:0!important;background:none!important;box-shadow:none!important;padding:8px 4px!important}
+main>.card:not(:first-child){border:0!important;box-shadow:none!important;background:none!important;border-radius:0!important;border-top:1px solid #d9cbb5!important;padding-left:0!important;padding-right:0!important}
+.list{border:0!important;box-shadow:none!important;background:none!important}
+main>.card:first-child{margin-top:14px}
+.empty{padding:8px 0!important;text-align:left!important}
+</style>
 </head>
 <body class="k-page">
 <header>
   <img class="d4-ninja" src="/kit/img/d4-ninja.webp" alt="" aria-hidden="true">
   <h1>くじ引きツール</h1>
-  <p>くじの術｜スマホを回して1人ずつ引く・重複なし</p>
 </header>
 
 <main>
@@ -333,7 +341,7 @@ details>summary{color:var(--k-sumi);text-decoration:underline;text-decoration-co
 
   <section class="card">
     <h2 id="result" style="scroll-margin-top:12px">引いた結果 <span id="count" style="color:var(--ink-soft);font-size:14px"></span></h2>
-    <div class="list" id="list"><div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div></div>
+    <div class="list" id="list"><div class="empty">まだ誰も引いていません</div></div>
 
     <label class="f" style="margin-top:12px">まだ出ていない数字</label>
     <div class="chips" id="left"><span class="note">まだ始まっていません</span></div>
@@ -551,7 +559,7 @@ $('btnNo49').onclick = () => {
 function render(msg){
   if (!st) {
     idle(msg);
-    $('list').innerHTML = '<div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div>';
+    $('list').innerHTML = '<div class="empty">まだ誰も引いていません</div>';
     $('left').innerHTML = '<span class="note">まだ始まっていません</span>';
     return;
   }
@@ -566,7 +574,7 @@ function render(msg){
   }
   setButtons();
   const el = $('list');
-  if (!d) el.innerHTML = '<div class="empty"><img src="/img/empty-pass.webp" width="320" height="198" alt="" loading="lazy" decoding="async">まだ誰も引いていません</div>';
+  if (!d) el.innerHTML = '<div class="empty">まだ誰も引いていません</div>';
   else {
     el.innerHTML = '';
     st.done.forEach(r => {
